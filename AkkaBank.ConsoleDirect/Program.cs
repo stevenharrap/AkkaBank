@@ -1,16 +1,16 @@
 ﻿using System;
 using Akka.Actor;
-using AkkaDakka.BasicBank.Actors;
-using AkkaDakka.BasicBank.Messages;
+using AkkaBank.BasicBank.Actors;
+using AkkaBank.BasicBank.Messages.Bank;
 
-namespace BasicActorExample
+namespace AkkaBank.ConsoleDirect
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var actorSystem = ActorSystem.Create("my-actor-system");
-            var bankActor = actorSystem.ActorOf(Props.Create(() => new BankActor()), "basic-bank");
+            var bankActor = actorSystem.ActorOf(Props.Create(() => new AccountActor()), "basic-bank-account");
             var input = string.Empty;
 
             while (input != "x")
@@ -25,7 +25,7 @@ namespace BasicActorExample
                         Console.WriteLine("Enter amount to deposit...");
                         if (int.TryParse(Console.ReadLine(), out var save))
                         {
-                            balance = (bankActor.Ask<BalanceMessage>(new DepositMoneyMessage(save)).GetAwaiter().GetResult()).Amount;
+                            balance = (bankActor.Ask<ReceiptMessage>(new DepositMoneyMessage(save)).GetAwaiter().GetResult()).Balance;
                         }
                         break;
 
@@ -33,7 +33,7 @@ namespace BasicActorExample
                         Console.WriteLine("Enter amount to withdraw...");
                         if (int.TryParse(Console.ReadLine(), out var spend))
                         {
-                            balance = (bankActor.Ask<BalanceMessage>(new WithdrawMoneyMessage(spend)).GetAwaiter().GetResult()).Amount;
+                            balance = (bankActor.Ask<ReceiptMessage>(new WithdrawMoneyMessage(spend)).GetAwaiter().GetResult()).Balance;
                         }
                         break;
                 }

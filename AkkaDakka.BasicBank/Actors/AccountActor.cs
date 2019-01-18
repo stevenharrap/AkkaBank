@@ -1,13 +1,13 @@
 ﻿using Akka.Actor;
-using AkkaDakka.BasicBank.Messages;
+using AkkaBank.BasicBank.Messages.Bank;
 
-namespace AkkaDakka.BasicBank.Actors
+namespace AkkaBank.BasicBank.Actors
 {
-    public class BankActor : ReceiveActor
+    public class AccountActor : ReceiveActor
     {
-        private int _account = 0;
+        private int _balance = 0;
 
-        public BankActor()
+        public AccountActor()
         {
             Receive<WithdrawMoneyMessage>(message => HandleWithdrawMoney(message));
             Receive<DepositMoneyMessage>(message => HandleDepositMoney(message));
@@ -15,16 +15,16 @@ namespace AkkaDakka.BasicBank.Actors
 
         private void HandleDepositMoney(DepositMoneyMessage message)
         {
-            _account += message.Amount;
+            _balance += message.Amount;
 
-            Sender.Tell(new BalanceMessage(_account));
+            Sender.Tell(new ReceiptMessage(_balance));
         }
 
         private void HandleWithdrawMoney(WithdrawMoneyMessage message)
         {
-            _account -= message.Amount;
+            _balance -= message.Amount;
 
-            Sender.Tell(new BalanceMessage(_account));
+            Sender.Tell(new ReceiptMessage(_balance));
         }
     }
 }

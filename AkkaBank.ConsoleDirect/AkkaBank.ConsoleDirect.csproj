@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AkkaDakka.BasicBank\AkkaDakka.BasicBank.csproj" />
+    <ProjectReference Include="..\AkkaDakka.BasicBank\AkkaBank.BasicBank.csproj" />
   </ItemGroup>
 
 </Project>

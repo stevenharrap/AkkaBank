@@ -1,4 +1,4 @@
-﻿namespace AkkaDakka.BasicBank.Messages
+﻿namespace AkkaBank.BasicBank.Messages.Bank
 {
     public class WithdrawMoneyMessage
     {
