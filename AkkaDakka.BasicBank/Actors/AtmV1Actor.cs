@@ -1,43 +1,23 @@
-﻿using System;
+﻿ using System;
 using Akka.Actor;
-using AkkaBank.BasicBank.Messages;
 using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.BasicBank.Messages.Console;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class AtmActor : ReceiveActor
+    public class AtmV1Actor : ReceiveActor
     {
         private IActorRef _console;
-        private IActorRef _bankAccount;
+        private IActorRef _bankAccount;        
 
-        private const string MainMenu =
-            "****************************************\n" +
-            "*                                      *\n" +
-            "*                                      *\n" +
-            "*         WELCOME TO BASIC BANK.       *\n" +
-            "*                                      *\n" +
-            "*         [w] WITHDRAWAL               *\n" +
-            "*         [d] DEPOSIT                  *\n" +
-            "*                                      *\n" +
-            "*                                      *\n" +
-            "*                                      *\n" +
-            "****************************************\n";
-
-        public AtmActor()
+        public AtmV1Actor()
         {
-            Become(MainMenuState);
+            Become(WaitingForAccountState);
         }
         
         protected override void PreStart()
         {
-            _console = Context.ActorOf(Props.Create(() => new ConsoleActor()), "atm-console");
-            _bankAccount = Context.ActorSelection("akka://my-actor-system/user/the-bank-account")
-                .ResolveOne(TimeSpan.FromSeconds(5))
-                .GetAwaiter()
-                .GetResult();
-
-            ShowWelcome();
+            _console = Context.ActorOf(Props.Create(() => new ConsoleActor()), "atm-console");            
         }
 
         protected override void Unhandled(object message)
@@ -46,6 +26,11 @@ namespace AkkaBank.BasicBank.Actors
         }
 
         #region States
+
+        private void WaitingForAccountState()
+        {
+            Receive<SetAccoutMessage>(message => HandleSetAccount(message));
+        }
 
         private void MainMenuState()
         {
@@ -70,6 +55,13 @@ namespace AkkaBank.BasicBank.Actors
         #endregion
 
         #region Handlers
+
+        private void HandleSetAccount(SetAccoutMessage message)
+        {
+            _bankAccount = message.BankAccout;
+            Become(MainMenuState);
+            _console.Tell(MakeMainMenuScreenMessage());
+        }
 
         private void HandleMainMenuInput(ConsoleInputMessage message)
         {
@@ -104,7 +96,7 @@ namespace AkkaBank.BasicBank.Actors
                     break;
 
                 default:
-                    _console.Tell(new ConsoleOutputMessage(MainMenu, true));
+                    _console.Tell(MakeMainMenuScreenMessage());
                     _console.Tell("What!? Try again...");
                     break;
             }
@@ -144,7 +136,7 @@ namespace AkkaBank.BasicBank.Actors
             Context.System.Scheduler.ScheduleTellOnce(
                 TimeSpan.FromSeconds(10),
                 _console,
-                new ConsoleOutputMessage(MainMenu, true),
+                MakeMainMenuScreenMessage(),                
                 Self);
 
             Become(MainMenuState);
@@ -152,9 +144,26 @@ namespace AkkaBank.BasicBank.Actors
 
         #endregion
 
-        private void ShowWelcome()
+        #region Screens        
+
+        private ConsoleOutputMessage MakeMainMenuScreenMessage()
         {
-            _console.Tell(new ConsoleOutputMessage(MainMenu, true));
+            const string MainMenuScreen =
+                "****************************************\n" +
+                "*                                      *\n" +
+                "*                                      *\n" +
+                "*         WELCOME TO BASIC BANK.       *\n" +
+                "*                                      *\n" +
+                "*         [w] WITHDRAWAL               *\n" +
+                "*         [d] DEPOSIT                  *\n" +
+                "*                                      *\n" +
+                "*                                      *\n" +
+                "*                                      *\n" +
+                "****************************************\n";
+
+            return new ConsoleOutputMessage(MainMenuScreen, true);            
         }
+
+        #endregion
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Akka.Actor;
 using AkkaBank.BasicBank.Actors;
+using AkkaBank.BasicBank.Messages.Bank;
 
-namespace AkkaBank.ConsoleAtm
+namespace AkkaBank.ConsoleAtmV2
 {
     internal class Program
     {
@@ -9,8 +10,7 @@ namespace AkkaBank.ConsoleAtm
         {
             var actorSystem = ActorSystem.Create("my-actor-system");
 
-            actorSystem.ActorOf(Props.Create(() => new AccountActor()), "the-bank-account");
-            actorSystem.ActorOf(Props.Create(() => new AtmActor()), "simple-bank-atm");
+            var atmV1 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "simple-bank-atm");            
 
             while (true)
             {
