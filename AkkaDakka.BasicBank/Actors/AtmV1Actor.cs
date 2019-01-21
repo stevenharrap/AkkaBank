@@ -29,36 +29,36 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForAccountState()
         {
-            Receive<SetAccoutMessage>(message => HandleSetAccount(message));
+            Receive<AccountActorMessage>(HandleSetAccount);
         }
 
         private void MainMenuState()
         {
-            Receive<ConsoleInputMessage>(message => HandleMainMenuInput(message));
+            Receive<ConsoleInputMessage>(HandleMainMenuInput);
         }
 
         private void WithdrawalState()
         {
-            Receive<ConsoleInputMessage>(message => HandleWithdrawalInput(message));
+            Receive<ConsoleInputMessage>(HandleWithdrawalInput);
         }
 
         private void DepositState()
         {
-            Receive<ConsoleInputMessage>(message => HandleDepositInput(message));
+            Receive<ConsoleInputMessage>(HandleDepositInput);
         }
 
         private void WaitingForReceiptState()
         {
-            Receive<ReceiptMessage>(message => HandleReceipt(message));
+            Receive<ReceiptMessage>(HandleReceipt);
         }
 
         #endregion
 
         #region Handlers
 
-        private void HandleSetAccount(SetAccoutMessage message)
+        private void HandleSetAccount(AccountActorMessage message)
         {
-            _bankAccount = message.BankAccout;
+            _bankAccount = message.Account;
             Become(MainMenuState);
             _console.Tell(MakeMainMenuScreenMessage());
         }

@@ -8,17 +8,17 @@ namespace AkkaBank.BasicBank.Actors
     public class AtmV2Actor : ReceiveActor
     {
         private IActorRef _console;
+        private IActorRef _bank;
         private IActorRef _bankAccount;
 
         public AtmV2Actor()
         {
-            Become(WaitingForAccountState);            
+            Become(WaitingForBankState);            
         }
         
         protected override void PreStart()
         {
             _console = Context.ActorOf(Props.Create(() => new ConsoleActor()), "atm-console");
-            _console.Tell(MakeAccountScreenMessage());
         }
 
         protected override void Unhandled(object message)
@@ -28,40 +28,83 @@ namespace AkkaBank.BasicBank.Actors
 
         #region States
 
+        private void WaitingForBankState()
+        {
+            Receive<BankActorMessage>(HandleBankActor);
+        }
+
+        private void WaitingForAccountNumberState()
+        {
+            Receive<ConsoleInputMessage>(HandleAccountNumberInput);
+        }
+
         private void WaitingForAccountState()
         {
-            Receive<SetAccoutMessage>(message => HandleSetAccount(message));
+            Receive<AccountActorMessage>(HandleAccountActor);
         }
 
         private void MainMenuState()
         {
-            Receive<ConsoleInputMessage>(message => HandleMainMenuInput(message));
+            Receive<ConsoleInputMessage>(HandleMainMenuInput);
         }
 
         private void WithdrawalState()
         {
-            Receive<ConsoleInputMessage>(message => HandleWithdrawalInput(message));
+            Receive<ConsoleInputMessage>(HandleWithdrawalInput);
         }
 
         private void DepositState()
         {
-            Receive<ConsoleInputMessage>(message => HandleDepositInput(message));
+            Receive<ConsoleInputMessage>(HandleDepositInput);
         }
 
         private void WaitingForReceiptState()
         {
-            Receive<ReceiptMessage>(message => HandleReceipt(message));
+            Receive<ReceiptMessage>(HandleReceipt);
         }
 
         #endregion
 
         #region Handlers
 
-        private void HandleSetAccount(SetAccoutMessage message)
+        private void HandleBankActor(BankActorMessage message)
         {
-            _bankAccount = message.BankAccout;
-            Become(MainMenuState);
-            _console.Tell(MakeMainMenuScreenMessage());
+            _bank = message.Bank;
+            Become(WaitingForAccountNumberState);
+            _console.Tell(MakeAccountScreenMessage());
+        }
+
+        private void HandleAccountNumberInput(ConsoleInputMessage message)
+        {
+            if (int.TryParse(message.Input, out var accountNumber))
+            {
+                _bank.Tell(new GetAccountMessage(accountNumber));
+                _console.Tell("Please wait.. taking to the bank.\n");
+                Become(WaitingForAccountState);
+                return;
+            }
+
+            _console.Tell("That's not an account number! Try again:");
+        }
+
+        private void HandleAccountActor(AccountActorMessage message)
+        {
+            if (message.Ok)
+            {
+                _bankAccount = message.Account;
+                _console.Tell(MakeMainMenuScreenMessage());
+                Become(MainMenuState);
+                return;
+            }
+
+            _console.Tell("Unknown account!");
+            Become(WaitingForAccountNumberState);
+
+            Context.System.Scheduler.ScheduleTellOnce(
+                TimeSpan.FromSeconds(7),
+                _console,
+                MakeAccountScreenMessage(),
+                Self);
         }
 
         private void HandleMainMenuInput(ConsoleInputMessage message)
@@ -138,10 +181,10 @@ namespace AkkaBank.BasicBank.Actors
             Become(WaitingForAccountState);
 
             Context.System.Scheduler.ScheduleTellOnce(
-                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(7),
                 _console,
                 MakeAccountScreenMessage(),                
-                Self);            
+                Self);
         }
 
         #endregion

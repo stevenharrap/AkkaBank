@@ -6,9 +6,11 @@ using Akka.Routing;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class CreateAccountMessage
+    public class CreateAccountMessage : IConsistentHashable
     {
         public int AccountNumber { get; }
+
+        public object ConsistentHashKey => AccountNumber;
 
         public string AccountName { get; }
 
@@ -19,9 +21,11 @@ namespace AkkaBank.BasicBank.Actors
         }
     }
 
-    public class GetAccountMessage
+    public class GetAccountMessage : IConsistentHashable
     {
         public int AccountNumber { get; }
+
+        public object ConsistentHashKey => AccountNumber;
 
         public GetAccountMessage(int accountNumber)
         {
@@ -29,13 +33,32 @@ namespace AkkaBank.BasicBank.Actors
         }
     }
 
-    public class AccountMesage
+    public class BankActorMessage
+    {
+        public IActorRef Bank { get; }
+
+        public BankActorMessage(IActorRef bank)
+        {
+            Bank = bank;
+        }
+    }
+
+    public class AccountActorMessage
     {
         public IActorRef Account { get; }
+        public bool Ok { get; }
+        public string Error { get; }
 
-        public AccountMesage(IActorRef account)
+        public AccountActorMessage(IActorRef account)
         {
             Account = account;
+            Ok = true;
+        }
+
+        public AccountActorMessage(string error)
+        {
+            Error = error;
+            Ok = false;
         }
     }
 
@@ -45,32 +68,51 @@ namespace AkkaBank.BasicBank.Actors
 
         public BankActor()
         {
-            Receive<CreateAccountMessage>(message => _bankAccountsRouter.Tell(message));
-            Receive<GetAccountMessage>(message => _bankAccountsRouter.Tell(message));
+            Receive<CreateAccountMessage>(message => _bankAccountsRouter.Tell(message, Sender));
+            Receive<GetAccountMessage>(message => _bankAccountsRouter.Tell(message, Sender));
         }
 
         protected override void PreStart()
         {
             _bankAccountsRouter = Context.ActorOf(
-                Props.Create<BankAccountsActor>().WithRouter(new ConsistentHashingPool(5)), "bank-accounts-router");
+                Props.Create<AccountsManagerActor>().WithRouter(new ConsistentHashingPool(5)), "bank-accounts-router");
         }
     }
 
-    public class BankAccountsActor : ReceiveActor
+    public class AccountsManagerActor : ReceiveActor
     {
         private readonly Dictionary<int, IActorRef> _accounts = new Dictionary<int, IActorRef>();
 
-        public BankAccountsActor() { }
+        public AccountsManagerActor()
+        {
+            Receive<CreateAccountMessage>(HandleCreateAccount);
+            Receive<GetAccountMessage>(HandleGetAccount);
+        }
 
         private void HandleCreateAccount(CreateAccountMessage message)
         {
+            if (_accounts.ContainsKey(message.AccountNumber))
+            {
+                Sender.Tell(new AccountActorMessage("The account already exists."));
+                return;
+            }
+
             var account = Context.ActorOf(Props.Create(() => new AccountActor()), $"account-{message.AccountNumber}");
             _accounts.Add(message.AccountNumber, account);
+
+            Sender.Tell(new AccountActorMessage(account));
         }
+
 
         private void HandleGetAccount(GetAccountMessage message)
         {
-            Sender.Tell(new AccountMesage(_accounts[message.AccountNumber]));
+            if (_accounts.TryGetValue(message.AccountNumber, out var accountActor))
+            {
+                Sender.Tell(new AccountActorMessage(accountActor));
+                return;
+            }
+
+            Sender.Tell(new AccountActorMessage("No account found."));
         }
     }
 }
