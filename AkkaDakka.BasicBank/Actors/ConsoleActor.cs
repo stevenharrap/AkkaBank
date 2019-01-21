@@ -32,8 +32,11 @@ namespace AkkaBank.BasicBank.Actors
                     parent.Tell(new ConsoleInputMessage(input));
                 }
             }, _consoleCancellation.Token);
-
+                        
             Console.WriteLine("BLEEP BLEEP. SIMPLE BANK CONSOLE ONLINE.");
+
+            //Pretend that it takes some time to start the ATM console.
+            Task.Delay(2000).GetAwaiter().GetResult();
         }
 
         private void HandleCloseConsole(CloseConsole message)

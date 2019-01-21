@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Akka.Actor;
 using AkkaBank.BasicBank.Actors;
-using AkkaBank.BasicBank.Messages.Bank;
 
 namespace AkkaBank.ConsoleAtmV2
 {
@@ -12,16 +11,12 @@ namespace AkkaBank.ConsoleAtmV2
             var actorSystem = ActorSystem.Create("my-actor-system");
 
             var bank = actorSystem.ActorOf(Props.Create(() => new BankActor()), "simple-bank");
-            await Task.Delay(1000);
-            bank.Tell(new CreateAccountMessage(123, "Billy White"));
-            bank.Tell(new CreateAccountMessage(456, "Sally Brown"));
-            bank.Tell(new CreateAccountMessage(789, "Wally Green"));
+            bank.Tell(new CreateCustomerRequestMessage(new Customer(123, "Billy White")));
+            bank.Tell(new CreateCustomerRequestMessage(new Customer(456, "Sally Brown")));
+            bank.Tell(new CreateCustomerRequestMessage(new Customer(789, "Wally Green")));
 
-            //var atmV2 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "simple-bank-atm");
-
-            //await Task.Delay(2000);
-
-            //atmV2.Tell(new BankActorMessage(bank));
+            var atmV2 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "simple-bank-atm");
+            atmV2.Tell(new BankActorMessage(bank));
 
             while (true)
             {

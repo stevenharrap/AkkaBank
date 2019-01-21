@@ -1,35 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Routing;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class CreateAccountMessage : IConsistentHashable
-    {
-        public int AccountNumber { get; }
+    public class CreateCustomerRequestMessage : IConsistentHashable
+    {     
+        public Customer Customer { get; }
 
-        public object ConsistentHashKey => AccountNumber;
+        public object ConsistentHashKey => Customer.CustomerNumber;        
 
-        public string AccountName { get; }
-
-        public CreateAccountMessage(int accountNumber, string accountName)
+        public CreateCustomerRequestMessage(Customer customer)
         {
-            AccountNumber = accountNumber;
-            AccountName = accountName;
+            Customer = customer;
         }
-    }
+    }    
 
-    public class GetAccountMessage : IConsistentHashable
+    public class GetCustomerRequstMessage : IConsistentHashable
     {
-        public int AccountNumber { get; }
+        public int CustomerNumber { get; }
 
-        public object ConsistentHashKey => AccountNumber;
+        public object ConsistentHashKey => CustomerNumber;
 
-        public GetAccountMessage(int accountNumber)
+        public GetCustomerRequstMessage(int customerNumber)
         {
-            AccountNumber = accountNumber;
+            CustomerNumber = customerNumber;
         }
     }
 
@@ -43,22 +41,48 @@ namespace AkkaBank.BasicBank.Actors
         }
     }
 
-    public class AccountActorMessage
+    public class GetCustomerResponseMessage
     {
-        public IActorRef Account { get; }
+        public CustomerAccount CustomerAccount { get; }
+
         public bool Ok { get; }
         public string Error { get; }
 
-        public AccountActorMessage(IActorRef account)
+        public GetCustomerResponseMessage(CustomerAccount customerAccount)
         {
-            Account = account;
+            CustomerAccount = customerAccount;
+            
             Ok = true;
         }
 
-        public AccountActorMessage(string error)
+        public GetCustomerResponseMessage(string error)
         {
             Error = error;
             Ok = false;
+        }
+    }
+
+    public class Customer
+    {
+        public int CustomerNumber { get; }
+        public string CustomerName { get; }
+
+        public Customer(int customerNumber, string customerName)
+        {
+            CustomerNumber = customerNumber;
+            CustomerName = customerName;
+        }
+    }
+
+    public class CustomerAccount
+    {
+        public Customer Customer { get; }
+        public IActorRef Account { get; }
+
+        public CustomerAccount(Customer customer, IActorRef account)
+        {
+            Customer = customer;
+            Account = account;
         }
     }
 
@@ -68,51 +92,61 @@ namespace AkkaBank.BasicBank.Actors
 
         public BankActor()
         {
-            Receive<CreateAccountMessage>(message => _bankAccountsRouter.Tell(message, Sender));
-            Receive<GetAccountMessage>(message => _bankAccountsRouter.Tell(message, Sender));
+            Receive<CreateCustomerRequestMessage>(message => _bankAccountsRouter.Tell(message, Sender));
+            Receive<GetCustomerRequstMessage>(message => _bankAccountsRouter.Tell(message, Sender));
         }
 
         protected override void PreStart()
         {
             _bankAccountsRouter = Context.ActorOf(
-                Props.Create<AccountsManagerActor>().WithRouter(new ConsistentHashingPool(5)), "bank-accounts-router");
+                Props.Create<CustomersManagerActor>().WithRouter(new ConsistentHashingPool(5)), "accounts-manager-router");
         }
     }
 
-    public class AccountsManagerActor : ReceiveActor
-    {
-        private readonly Dictionary<int, IActorRef> _accounts = new Dictionary<int, IActorRef>();
+    public class CustomersManagerActor : ReceiveActor
+    {      
+        private readonly Dictionary<int, CustomerAccount> _accounts = new Dictionary<int, CustomerAccount>();
 
-        public AccountsManagerActor()
+        public CustomersManagerActor()
         {
-            Receive<CreateAccountMessage>(HandleCreateAccount);
-            Receive<GetAccountMessage>(HandleGetAccount);
+            Receive<CreateCustomerRequestMessage>(HandleCreateCustomerRequest);
+            Receive<GetCustomerRequstMessage>(HandleGetCustomerRequest);
         }
 
-        private void HandleCreateAccount(CreateAccountMessage message)
+        private void HandleCreateCustomerRequest(CreateCustomerRequestMessage message)
         {
-            if (_accounts.ContainsKey(message.AccountNumber))
+            GetCustomerResponseMessage response;
+
+            if (_accounts.ContainsKey(message.Customer.CustomerNumber))
             {
-                Sender.Tell(new AccountActorMessage("The account already exists."));
+                response = new GetCustomerResponseMessage("The account already exists.");
+            }
+            else
+            {
+                var account = Context.ActorOf(Props.Create(() => new AccountActor()), $"account-{message.Customer.CustomerNumber}");
+                var customerAccount = new CustomerAccount(message.Customer, account);
+                _accounts.Add(message.Customer.CustomerNumber, customerAccount);
+                response = new GetCustomerResponseMessage(customerAccount);
+            }
+
+            if (!Sender.IsNobody())
+            {
+                Sender.Tell(response);
+            }            
+        }
+
+        private void HandleGetCustomerRequest(GetCustomerRequstMessage message)
+        {
+            //Pretend that it takes some time to find an account.
+            Task.Delay(2000).GetAwaiter().GetResult();
+
+            if (_accounts.TryGetValue(message.CustomerNumber, out var customerAccount))
+            {
+                Sender.Tell(new GetCustomerResponseMessage(customerAccount));
                 return;
             }
 
-            var account = Context.ActorOf(Props.Create(() => new AccountActor()), $"account-{message.AccountNumber}");
-            _accounts.Add(message.AccountNumber, account);
-
-            Sender.Tell(new AccountActorMessage(account));
-        }
-
-
-        private void HandleGetAccount(GetAccountMessage message)
-        {
-            if (_accounts.TryGetValue(message.AccountNumber, out var accountActor))
-            {
-                Sender.Tell(new AccountActorMessage(accountActor));
-                return;
-            }
-
-            Sender.Tell(new AccountActorMessage("No account found."));
-        }
+            Sender.Tell(new GetCustomerResponseMessage("No account found."));
+        }        
     }
 }

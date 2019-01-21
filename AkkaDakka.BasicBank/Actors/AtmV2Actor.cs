@@ -9,7 +9,7 @@ namespace AkkaBank.BasicBank.Actors
     {
         private IActorRef _console;
         private IActorRef _bank;
-        private IActorRef _bankAccount;
+        private CustomerAccount _customerAccount;
 
         public AtmV2Actor()
         {
@@ -33,14 +33,14 @@ namespace AkkaBank.BasicBank.Actors
             Receive<BankActorMessage>(HandleBankActor);
         }
 
-        private void WaitingForAccountNumberState()
+        private void WaitingForCustomerNumberState()
         {
-            Receive<ConsoleInputMessage>(HandleAccountNumberInput);
+            Receive<ConsoleInputMessage>(HandleCustomerNumberInput);
         }
 
-        private void WaitingForAccountState()
+        private void WaitingForCustomerState()
         {
-            Receive<AccountActorMessage>(HandleAccountActor);
+            Receive<GetCustomerResponseMessage>(HandleCustomerResponse);
         }
 
         private void MainMenuState()
@@ -70,35 +70,35 @@ namespace AkkaBank.BasicBank.Actors
         private void HandleBankActor(BankActorMessage message)
         {
             _bank = message.Bank;
-            Become(WaitingForAccountNumberState);
+            Become(WaitingForCustomerNumberState);
             _console.Tell(MakeAccountScreenMessage());
         }
 
-        private void HandleAccountNumberInput(ConsoleInputMessage message)
+        private void HandleCustomerNumberInput(ConsoleInputMessage message)
         {
             if (int.TryParse(message.Input, out var accountNumber))
             {
-                _bank.Tell(new GetAccountMessage(accountNumber));
+                _bank.Tell(new GetCustomerRequstMessage(accountNumber));
                 _console.Tell("Please wait.. taking to the bank.\n");
-                Become(WaitingForAccountState);
+                Become(WaitingForCustomerState);
                 return;
             }
 
             _console.Tell("That's not an account number! Try again:");
         }
 
-        private void HandleAccountActor(AccountActorMessage message)
+        private void HandleCustomerResponse(GetCustomerResponseMessage message)
         {
             if (message.Ok)
             {
-                _bankAccount = message.Account;
+                _customerAccount = message.CustomerAccount;
                 _console.Tell(MakeMainMenuScreenMessage());
                 Become(MainMenuState);
                 return;
             }
 
             _console.Tell("Unknown account!");
-            Become(WaitingForAccountNumberState);
+            Become(WaitingForCustomerNumberState);
 
             Context.System.Scheduler.ScheduleTellOnce(
                 TimeSpan.FromSeconds(7),
@@ -150,7 +150,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _bankAccount.Tell(new DepositMoneyMessage(amount));
+                _customerAccount.Account.Tell(new DepositMoneyMessage(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForReceiptState);
                 return;
@@ -163,7 +163,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _bankAccount.Tell(new WithdrawMoneyMessage(amount));
+                _customerAccount.Account.Tell(new WithdrawMoneyMessage(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForReceiptState);
                 return;
@@ -177,8 +177,8 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("Your transaction is complete!...\n");
             _console.Tell($"The balance of your account is: ${message.Balance}\n");
 
-            _bankAccount = null;
-            Become(WaitingForAccountState);
+            _customerAccount = null;
+            Become(WaitingForCustomerState);
 
             Context.System.Scheduler.ScheduleTellOnce(
                 TimeSpan.FromSeconds(7),
@@ -193,10 +193,12 @@ namespace AkkaBank.BasicBank.Actors
 
         private ConsoleOutputMessage MakeMainMenuScreenMessage()
         {
-            const string MainMenuScreen =
+            var name = _customerAccount.Customer.CustomerName;
+            var MainMenuScreen =
                 "****************************************\n" +
                 "*                                      *\n" +
                 "*                                      *\n" +
+                $"*         Hi {name},         *\n" +
                 "*         WELCOME TO BASIC BANK.       *\n" +
                 "*                                      *\n" +
                 "*         [w] WITHDRAWAL               *\n" +
