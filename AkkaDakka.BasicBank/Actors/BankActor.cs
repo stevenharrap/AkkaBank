@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Dispatch.SysMsg;
 using Akka.Routing;
 
 namespace AkkaBank.BasicBank.Actors
@@ -111,6 +112,23 @@ namespace AkkaBank.BasicBank.Actors
         {
             Receive<CreateCustomerRequestMessage>(HandleCreateCustomerRequest);
             Receive<GetCustomerRequstMessage>(HandleGetCustomerRequest);
+        }
+
+        protected override SupervisorStrategy SupervisorStrategy()
+        {
+            return new OneForOneStrategy(
+                maxNrOfRetries: 10,
+                withinTimeRange: TimeSpan.FromMinutes(1),
+                localOnlyDecider: ex =>
+                {
+                    switch (ex)
+                    {
+                        case NegativeAccountBalanceException nabe:
+                            return Directive.Resume;
+                        default:
+                            return Directive.Escalate;
+                    }
+                });
         }
 
         private void HandleCreateCustomerRequest(CreateCustomerRequestMessage message)

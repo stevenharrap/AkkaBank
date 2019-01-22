@@ -5,6 +5,10 @@ using AkkaBank.BasicBank.Messages.Console;
 
 namespace AkkaBank.BasicBank.Actors
 {
+    public class ReceiptTimedOutMessge
+    {
+    }
+
     public class AtmV2Actor : ReceiveActor
     {
         private IActorRef _console;
@@ -23,7 +27,17 @@ namespace AkkaBank.BasicBank.Actors
 
         protected override void Unhandled(object message)
         {
-            _console.Tell("BEEP BEEP BEEP. UNEXPECTED INPUT!");
+            switch (message)
+            {
+                case ReceiptTimedOutMessge rto:
+                    break;
+                case string s:
+                    _console.Tell("BEEP BEEP BEEP. UNEXPECTED CONSOLE INPUT!");
+                    break;
+                default:
+                    _console.Tell("BEEP BEEP BEEP. UNEXPECTED MESSAGE!");
+                    break;
+            }            
         }
 
         #region States
@@ -50,7 +64,7 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WithdrawalState()
         {
-            Receive<ConsoleInputMessage>(HandleWithdrawalInput);
+            Receive<ConsoleInputMessage>(HandleWithdrawalInput);            
         }
 
         private void DepositState()
@@ -61,6 +75,7 @@ namespace AkkaBank.BasicBank.Actors
         private void WaitingForReceiptState()
         {
             Receive<ReceiptMessage>(HandleReceipt);
+            Receive<ReceiptTimedOutMessge>(HandleTransactionTimedOut);
         }
 
         #endregion
@@ -71,7 +86,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             _bank = message.Bank;
             Become(WaitingForCustomerNumberState);
-            _console.Tell(MakeAccountScreenMessage());
+            _console.Tell(MakeWelcomeScreenMessage());
         }
 
         private void HandleCustomerNumberInput(ConsoleInputMessage message)
@@ -85,6 +100,13 @@ namespace AkkaBank.BasicBank.Actors
             }
 
             _console.Tell("That's not an account number! Try again:");
+        }
+
+        private void HandleTransactionTimedOut(ReceiptTimedOutMessge message)
+        {
+            _customerAccount = null;
+            Become(WaitingForCustomerNumberState);
+            _console.Tell(MakeWelcomeScreenMessage());
         }
 
         private void HandleCustomerResponse(GetCustomerResponseMessage message)
@@ -103,7 +125,7 @@ namespace AkkaBank.BasicBank.Actors
             Context.System.Scheduler.ScheduleTellOnce(
                 TimeSpan.FromSeconds(7),
                 _console,
-                MakeAccountScreenMessage(),
+                MakeWelcomeScreenMessage(),
                 Self);
         }
 
@@ -152,6 +174,12 @@ namespace AkkaBank.BasicBank.Actors
             {
                 _customerAccount.Account.Tell(new DepositMoneyMessage(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
+                Context.System.Scheduler.ScheduleTellOnce(
+                    TimeSpan.FromSeconds(6),
+                    Self,
+                    new ReceiptTimedOutMessge(),
+                    Self);
+
                 Become(WaitingForReceiptState);
                 return;
             }
@@ -165,6 +193,12 @@ namespace AkkaBank.BasicBank.Actors
             {
                 _customerAccount.Account.Tell(new WithdrawMoneyMessage(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
+                Context.System.Scheduler.ScheduleTellOnce(
+                    TimeSpan.FromSeconds(6),
+                    Self,
+                    new ReceiptTimedOutMessge(),
+                    Self);
+
                 Become(WaitingForReceiptState);
                 return;
             }
@@ -178,12 +212,12 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell($"The balance of your account is: ${message.Balance}\n");
 
             _customerAccount = null;
-            Become(WaitingForCustomerState);
+            Become(WaitingForCustomerNumberState);
 
             Context.System.Scheduler.ScheduleTellOnce(
                 TimeSpan.FromSeconds(7),
                 _console,
-                MakeAccountScreenMessage(),                
+                MakeWelcomeScreenMessage(),                
                 Self);
         }
 
@@ -211,9 +245,9 @@ namespace AkkaBank.BasicBank.Actors
             return new ConsoleOutputMessage(MainMenuScreen, true);            
         }
 
-        private ConsoleOutputMessage MakeAccountScreenMessage()
+        private ConsoleOutputMessage MakeWelcomeScreenMessage()
         {
-            const string AccountScreen =
+            const string WelcomeScreen =
                 "****************************************\n" +
                 "*                                      *\n" +
                 "*                                      *\n" +
@@ -225,7 +259,7 @@ namespace AkkaBank.BasicBank.Actors
                 "*                                      *\n" +
                 "****************************************\n";
 
-            return new ConsoleOutputMessage(AccountScreen, true);
+            return new ConsoleOutputMessage(WelcomeScreen, true);
         }
 
         #endregion
