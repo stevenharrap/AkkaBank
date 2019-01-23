@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaBank.ConsoleAtmV1", "Ak
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaBank.ConsoleAtmV2", "AkkaBank.ConsoleAtmV2\AkkaBank.ConsoleAtmV2.csproj", "{2F5961A9-D1F4-40A5-A4E3-B231751474A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaBank.ConsoleNode", "AkkaBank.ConsoleNode\AkkaBank.ConsoleNode.csproj", "{BF25CC7B-86E9-4632-98B0-7EEB5D9C1F00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2F5961A9-D1F4-40A5-A4E3-B231751474A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F5961A9-D1F4-40A5-A4E3-B231751474A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F5961A9-D1F4-40A5-A4E3-B231751474A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF25CC7B-86E9-4632-98B0-7EEB5D9C1F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF25CC7B-86E9-4632-98B0-7EEB5D9C1F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF25CC7B-86E9-4632-98B0-7EEB5D9C1F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF25CC7B-86E9-4632-98B0-7EEB5D9C1F00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
