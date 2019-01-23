@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AkkaBank.ConsoleNode": {
+      "commandName": "Project",
+      "commandLineArgs": "atm-city"
+    }
+  }
+}

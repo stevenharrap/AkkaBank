@@ -42,16 +42,12 @@
             }
         }
     */
-    "MultiProjectConfigurations": {
-      "Cluster": {
-        "Projects": {
-          "AkkaBank.ConsoleNode": {
-            "CommandLineArguments": "bank"
-          },
-          "AkkaBank.ConsoleNode": {
-            "CommandLineArguments": "atm-city"
-          }
-        } 
-      } 
+  "MultiProjectConfigurations": {
+    "Cluster": {
+      "Projects": {
+        "AkkaBank.ConsoleNodeAtm1": {},
+        "AkkaBank.ConsoleNodeBank1": {}
+      }
     }
+  }
 }
