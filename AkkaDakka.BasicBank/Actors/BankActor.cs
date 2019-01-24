@@ -5,87 +5,10 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Dispatch.SysMsg;
 using Akka.Routing;
+using AkkaBank.BasicBank.Messages.Bank;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class CreateCustomerRequestMessage : IConsistentHashable
-    {     
-        public Customer Customer { get; }
-
-        public object ConsistentHashKey => Customer.CustomerNumber;        
-
-        public CreateCustomerRequestMessage(Customer customer)
-        {
-            Customer = customer;
-        }
-    }    
-
-    public class GetCustomerRequstMessage : IConsistentHashable
-    {
-        public int CustomerNumber { get; }
-
-        public object ConsistentHashKey => CustomerNumber;
-
-        public GetCustomerRequstMessage(int customerNumber)
-        {
-            CustomerNumber = customerNumber;
-        }
-    }
-
-    public class BankActorMessage
-    {
-        public IActorRef Bank { get; }
-
-        public BankActorMessage(IActorRef bank)
-        {
-            Bank = bank;
-        }
-    }
-
-    public class GetCustomerResponseMessage
-    {
-        public CustomerAccount CustomerAccount { get; }
-
-        public bool Ok { get; }
-        public string Error { get; }
-
-        public GetCustomerResponseMessage(CustomerAccount customerAccount)
-        {
-            CustomerAccount = customerAccount;
-            Ok = true;
-        }
-
-        public GetCustomerResponseMessage(string error)
-        {
-            Error = error;
-            Ok = false;
-        }
-    }
-
-    public class Customer
-    {
-        public int CustomerNumber { get; }
-        public string CustomerName { get; }
-
-        public Customer(int customerNumber, string customerName)
-        {
-            CustomerNumber = customerNumber;
-            CustomerName = customerName;
-        }
-    }
-
-    public class CustomerAccount
-    {
-        public Customer Customer { get; }
-        public IActorRef Account { get; }
-
-        public CustomerAccount(Customer customer, IActorRef account)
-        {
-            Customer = customer;
-            Account = account;
-        }
-    }
-
     public class BankActor : ReceiveActor
     {
         private IActorRef _bankAccountsRouter;

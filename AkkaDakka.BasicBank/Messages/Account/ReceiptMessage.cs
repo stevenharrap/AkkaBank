@@ -1,4 +1,4 @@
-﻿namespace AkkaBank.BasicBank.Messages.Bank
+﻿namespace AkkaBank.BasicBank.Messages.Account
 {
     public class ReceiptMessage
     {

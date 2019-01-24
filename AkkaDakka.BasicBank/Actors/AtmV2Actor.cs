@@ -1,5 +1,6 @@
 ﻿ using System;
 using Akka.Actor;
+using AkkaBank.BasicBank.Messages.Account;
 using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.BasicBank.Messages.Console;
 

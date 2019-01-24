@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Akka.Actor;
 using AkkaBank.BasicBank.Actors;
+using AkkaBank.BasicBank.Messages.Bank;
 
 namespace AkkaBank.ConsoleAtmV2
 {

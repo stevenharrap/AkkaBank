@@ -6,6 +6,7 @@ using Akka.Cluster;
 using Akka.Cluster.Tools.Singleton;
 using Akka.Configuration;
 using AkkaBank.BasicBank.Actors;
+using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.ConsoleNode;
 
 namespace AkkaBank.ConsoleNodeBank1

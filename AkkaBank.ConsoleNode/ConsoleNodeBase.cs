@@ -8,6 +8,36 @@ namespace AkkaBank.ConsoleNode
         public const string ClusterName = "basic-bank-cluster";
         public const string BankRoleName = "bank-role";
 
+        // Only a seed node can define the minimum cluster configuration.
+        public static readonly string SeedHocon = $@"akka {{
+                actor.provider = cluster
+                remote {{
+                    dot-netty.tcp {{
+                        port = 8081
+                        hostname = localhost
+                    }}
+                }}
+                cluster {{
+                    seed-nodes = [""akka.tcp://{ClusterName}@localhost:8081""]
+                    roles = [""seed-role""]
+                    role.[""{BankRoleName}""].min-nr-of-members = 1
+                }}
+            }}";
+
+        public static readonly string BankHocon = $@"akka {{
+                actor.provider = cluster
+                remote {{
+                    dot-netty.tcp {{
+                        port = 0
+                        hostname = localhost
+                    }}
+                }}
+                cluster {{
+                    seed-nodes = [""akka.tcp://{ClusterName}@localhost:8081""]
+                    roles = [""{BankRoleName}""]
+                }}
+            }}";
+
         public static readonly string AtmHocon = $@"akka {{
                 actor.provider = cluster
                 remote {{
@@ -18,23 +48,8 @@ namespace AkkaBank.ConsoleNode
                 }}
                 cluster {{
                     seed-nodes = [""akka.tcp://{ClusterName}@localhost:8081""]
-                    roles = [""atm""] # roles this member is in
-                    role.[""{BankRoleName}""].min-nr-of-members = 1 # atm role needs a minimum of 1 bank in the cluster
+                    roles = [""atm""]                    
                 }}
-            }}";
-
-        public static readonly string BankHocon = $@"akka {{
-                actor.provider = cluster
-                remote {{
-                    dot-netty.tcp {{
-                        port = 8081 # this will be a seed node
-                        hostname = localhost
-                    }}
-                }}
-                cluster {{
-                    seed-nodes = [""akka.tcp://{ClusterName}@localhost:8081""]
-                    roles = [""{BankRoleName}""] # roles this member is in
-                }}
-            }}";
+            }}";        
     }
 }

@@ -6,6 +6,7 @@ using Akka.Cluster;
 using Akka.Cluster.Tools.Singleton;
 using Akka.Configuration;
 using AkkaBank.BasicBank.Actors;
+using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.ConsoleNode;
 
 
@@ -17,15 +18,18 @@ namespace AkkaBank.ConsoleNodeAtm2
         {
             var config = ConfigurationFactory.ParseString(AtmHocon);
             var actorSystem = ActorSystem.Create(ClusterName, config);
+            var clusterSystem = Cluster.Get(actorSystem);
 
-            var atmV2 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "atm2");
+            clusterSystem.RegisterOnMemberUp(() =>
+            {
+                var atmV2 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "atm2");
+                var bankProxy = actorSystem.ActorOf(ClusterSingletonProxy.Props(
+                        singletonManagerPath: $"/user/{BankActorName}",
+                        settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
+                    name: $"{BankActorName}-proxy");
 
-            var bankProxy = actorSystem.ActorOf(ClusterSingletonProxy.Props(
-                    singletonManagerPath: $"/user/{BankActorName}",
-                    settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
-                name: $"{BankActorName}-proxy");
-
-            atmV2.Tell(new BankActorMessage(bankProxy));
+                atmV2.Tell(new BankActorMessage(bankProxy));
+            });
 
             while (true)
             {
