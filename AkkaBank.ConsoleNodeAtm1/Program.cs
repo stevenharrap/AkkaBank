@@ -12,8 +12,6 @@ namespace AkkaBank.ConsoleNodeAtm1
 {
     internal class Program : ConsoleNodeBase
     {
-       private const string BankActorName = "simple-bank";
-
         public static async Task Main(string[] args)
         {
             var config = ConfigurationFactory.ParseString(AtmHocon);
@@ -21,12 +19,12 @@ namespace AkkaBank.ConsoleNodeAtm1
 
             var atmV2 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "atm1");
 
-            var bank = actorSystem.ActorOf(ClusterSingletonProxy.Props(
-                singletonManagerPath: $"/user/{BankActorName}",
-                settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole("bank")),
+            var bankProxy = actorSystem.ActorOf(ClusterSingletonProxy.Props(
+                    singletonManagerPath: $"/user/{BankActorName}",
+                    settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
                 name: $"{BankActorName}-proxy");
 
-            atmV2.Tell(new BankActorMessage(bank));
+            atmV2.Tell(new BankActorMessage(bankProxy));
 
             while (true)
             {

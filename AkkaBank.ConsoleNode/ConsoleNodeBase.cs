@@ -6,6 +6,7 @@ namespace AkkaBank.ConsoleNode
     {
         public const string BankActorName = "simple-bank";
         public const string ClusterName = "basic-bank-cluster";
+        public const string BankRoleName = "bank-role";
 
         public static readonly string AtmHocon = $@"akka {{
                 actor.provider = cluster
@@ -18,7 +19,7 @@ namespace AkkaBank.ConsoleNode
                 cluster {{
                     seed-nodes = [""akka.tcp://{ClusterName}@localhost:8081""]
                     roles = [""atm""] # roles this member is in
-                    role.[""bank""].min-nr-of-members = 1 # atm role needs a minimum of 1 bank in the cluster
+                    role.[""{BankRoleName}""].min-nr-of-members = 1 # atm role needs a minimum of 1 bank in the cluster
                 }}
             }}";
 
@@ -32,7 +33,7 @@ namespace AkkaBank.ConsoleNode
                 }}
                 cluster {{
                     seed-nodes = [""akka.tcp://{ClusterName}@localhost:8081""]
-                    roles = [""bank""] # roles this member is in
+                    roles = [""{BankRoleName}""] # roles this member is in
                 }}
             }}";
     }

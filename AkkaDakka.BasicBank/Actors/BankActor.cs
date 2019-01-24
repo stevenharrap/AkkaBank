@@ -52,7 +52,6 @@ namespace AkkaBank.BasicBank.Actors
         public GetCustomerResponseMessage(CustomerAccount customerAccount)
         {
             CustomerAccount = customerAccount;
-            
             Ok = true;
         }
 
@@ -93,8 +92,14 @@ namespace AkkaBank.BasicBank.Actors
 
         public BankActor()
         {
-            Receive<CreateCustomerRequestMessage>(message => _bankAccountsRouter.Tell(message, Sender));
-            Receive<GetCustomerRequstMessage>(message => _bankAccountsRouter.Tell(message, Sender));
+            Receive<CreateCustomerRequestMessage>(message =>
+            {
+                _bankAccountsRouter.Tell(message, Sender);
+            });
+            Receive<GetCustomerRequstMessage>(message =>
+            {
+                _bankAccountsRouter.Tell(message, Sender);
+            });
         }
 
         protected override void PreStart()

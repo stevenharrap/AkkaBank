@@ -16,15 +16,24 @@ namespace AkkaBank.ConsoleNodeBank1
         {
             var config = ConfigurationFactory.ParseString(BankHocon);
             var actorSystem = ActorSystem.Create(ClusterName, config);
+            var clusterSystem = Cluster.Get(actorSystem);
 
-            var bank = actorSystem.ActorOf(ClusterSingletonManager.Props(
-                Props.Create(() => new BankActor()),
-                settings: ClusterSingletonManagerSettings.Create(actorSystem).WithRole("bank")), 
-                BankActorName);
+            clusterSystem.RegisterOnMemberUp(() =>
+            {
+                actorSystem.ActorOf(ClusterSingletonManager.Props(
+                        Props.Create(() => new BankActor()),
+                        settings: ClusterSingletonManagerSettings.Create(actorSystem).WithRole(BankRoleName)),
+                    BankActorName);
 
-            bank.Tell(new CreateCustomerRequestMessage(new Customer(123, "Billy White")));
-            bank.Tell(new CreateCustomerRequestMessage(new Customer(456, "Sally Brown")));
-            bank.Tell(new CreateCustomerRequestMessage(new Customer(789, "Wally Green")));
+                var bankProxy = actorSystem.ActorOf(ClusterSingletonProxy.Props(
+                        singletonManagerPath: $"/user/{BankActorName}",
+                        settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
+                    name: $"{BankActorName}-proxy");
+
+                bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(123, "Billy White")));
+                bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(456, "Sally Brown")));
+                bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(789, "Wally Green")));
+            });
 
             while (true)
             {
