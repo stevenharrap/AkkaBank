@@ -31,9 +31,19 @@ namespace AkkaBank.ConsoleNodeBank1
                         settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
                     name: $"{BankActorName}-proxy");
 
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("BANK NODE UP!");
+
+                Console.WriteLine("ADD Billy White.");
                 bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(123, "Billy White")));
+                Console.WriteLine("ADD Sally Brown.");
                 bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(456, "Sally Brown")));
+                Console.WriteLine("ADD Wally Green.");
                 bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(789, "Wally Green")));
+                Console.ResetColor();
+
+                
             });
 
             while (true)

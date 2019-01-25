@@ -1,15 +1,14 @@
 ﻿ using System;
 using Akka.Actor;
-using AkkaBank.BasicBank.Messages.Account;
+ using Akka.Cluster.Tools.PublishSubscribe;
+ using AkkaBank.BasicBank.Messages.Account;
+using AkkaBank.BasicBank.Messages.AtmV2;
 using AkkaBank.BasicBank.Messages.Bank;
-using AkkaBank.BasicBank.Messages.Console;
+ using AkkaBank.BasicBank.Messages.BankAdmin;
+ using AkkaBank.BasicBank.Messages.Console;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class ReceiptTimedOutMessge
-    {
-    }
-
     public class AtmV2Actor : ReceiveActor
     {
         private IActorRef _console;
@@ -18,7 +17,10 @@ namespace AkkaBank.BasicBank.Actors
 
         public AtmV2Actor()
         {
-            Become(WaitingForBankState);            
+            var mediator = DistributedPubSub.Get(Context.System).Mediator;
+            mediator.Tell(new Subscribe("advert", Self));
+
+            Become(WaitingForBankState);
         }
         
         protected override void PreStart()
@@ -30,14 +32,11 @@ namespace AkkaBank.BasicBank.Actors
         {
             switch (message)
             {
-                case ReceiptTimedOutMessge rto:
-                    break;
-                case string s:
+                case ConsoleInputMessage cim:
                     _console.Tell("BEEP BEEP BEEP. UNEXPECTED CONSOLE INPUT!");
                     break;
-                default:
-                    _console.Tell("BEEP BEEP BEEP. UNEXPECTED MESSAGE!");
-                    break;
+
+                //possibly log other message types
             }            
         }
 
@@ -51,6 +50,7 @@ namespace AkkaBank.BasicBank.Actors
         private void WaitingForCustomerNumberState()
         {
             Receive<ConsoleInputMessage>(HandleCustomerNumberInput);
+            Receive<AdvertisementMessage>(HandleAdvertisement);
         }
 
         private void WaitingForCustomerState()
@@ -76,7 +76,7 @@ namespace AkkaBank.BasicBank.Actors
         private void WaitingForReceiptState()
         {
             Receive<ReceiptMessage>(HandleReceipt);
-            Receive<ReceiptTimedOutMessge>(HandleTransactionTimedOut);
+            Receive<ReceiptTimedOutMessage>(HandleTransactionTimedOut);
         }
 
         #endregion
@@ -88,6 +88,11 @@ namespace AkkaBank.BasicBank.Actors
             _bank = message.Bank;
             Become(WaitingForCustomerNumberState);
             _console.Tell(MakeWelcomeScreenMessage());
+        }
+
+        private void HandleAdvertisement(AdvertisementMessage message)
+        {
+            _console.Tell(MakeWelcomeScreenMessage(message));
         }
 
         private void HandleCustomerNumberInput(ConsoleInputMessage message)
@@ -103,7 +108,7 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("That's not an account number! Try again:");
         }
 
-        private void HandleTransactionTimedOut(ReceiptTimedOutMessge message)
+        private void HandleTransactionTimedOut(ReceiptTimedOutMessage message)
         {
             _customerAccount = null;
             Become(WaitingForCustomerNumberState);
@@ -178,7 +183,7 @@ namespace AkkaBank.BasicBank.Actors
                 Context.System.Scheduler.ScheduleTellOnce(
                     TimeSpan.FromSeconds(6),
                     Self,
-                    new ReceiptTimedOutMessge(),
+                    new ReceiptTimedOutMessage(),
                     Self);
 
                 Become(WaitingForReceiptState);
@@ -197,7 +202,7 @@ namespace AkkaBank.BasicBank.Actors
                 Context.System.Scheduler.ScheduleTellOnce(
                     TimeSpan.FromSeconds(6),
                     Self,
-                    new ReceiptTimedOutMessge(),
+                    new ReceiptTimedOutMessage(),
                     Self);
 
                 Become(WaitingForReceiptState);
@@ -246,21 +251,27 @@ namespace AkkaBank.BasicBank.Actors
             return new ConsoleOutputMessage(MainMenuScreen, true);            
         }
 
-        private ConsoleOutputMessage MakeWelcomeScreenMessage()
+        private ConsoleOutputMessage MakeWelcomeScreenMessage(AdvertisementMessage advert = null)
         {
-            const string WelcomeScreen =
+            var welcomeScreen =
                 "****************************************\n" +
                 "*                                      *\n" +
                 "*                                      *\n" +
-                "*         WELCOME TO BASIC BANK.       *\n" +
-                "*                                      *\n" +
+                "*         WELCOME TO BASIC BANK.       *\n";
+
+            if (advert != null)
+            {
+                welcomeScreen += advert.Blurb;
+            }
+
+            welcomeScreen +=     "*                                      *\n" +
                 "*         PLEASE ENTER YOU ACC.        *\n" +
                 "*                                      *\n" +
                 "*                                      *\n" +
                 "*                                      *\n" +
                 "****************************************\n";
 
-            return new ConsoleOutputMessage(WelcomeScreen, true);
+            return new ConsoleOutputMessage(welcomeScreen, true);
         }
 
         #endregion

@@ -48,7 +48,8 @@
         "AkkaBank.ConsoleNodeSeed": {},
         "AkkaBank.ConsoleNodeAtm1": {},
         "AkkaBank.ConsoleNodeAtm2": {},
-        "AkkaBank.ConsoleNodeBank1": {}
+        "AkkaBank.ConsoleNodeBank1": {},
+        "AkkaBank.ConsoleNodeBankAdmin": {}
       }
     },
     "Cluster With ATM waiting for bank": {

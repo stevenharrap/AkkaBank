@@ -9,28 +9,32 @@ using AkkaBank.BasicBank.Actors;
 using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.ConsoleNode;
 
-namespace AkkaBank.ConsoleNodeSeed
+
+namespace AkkaBank.ConsoleNodeBankAdmin
 {
     internal class Program : ConsoleNodeBase
     {
         public static async Task Main(string[] args)
         {
-            var config = ConfigurationFactory.ParseString(SeedHocon);
+            var config = ConfigurationFactory.ParseString(AtmHocon);
             var actorSystem = ActorSystem.Create(ClusterName, config);
             var clusterSystem = Cluster.Get(actorSystem);
 
             clusterSystem.RegisterOnMemberUp(() =>
             {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("SEED NODE UP!");
-                Console.ResetColor();
+                var bankAdmin = actorSystem.ActorOf(Props.Create(() => new BankAdminActor()), "bank-admin");
+                var bankProxy = actorSystem.ActorOf(ClusterSingletonProxy.Props(
+                        singletonManagerPath: $"/user/{BankActorName}",
+                        settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
+                    name: $"{BankActorName}-proxy");
+
+                bankAdmin.Tell(new BankActorMessage(bankProxy));
             });
 
             while (true)
             {
                 await Task.Delay(10);
             }
-        }        
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace AkkaBank.ConsoleNode
         // Only a seed node can define the minimum cluster configuration.
         public static readonly string SeedHocon = $@"akka {{
                 actor.provider = cluster
+                extensions = [""Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubExtensionProvider,Akka.Cluster.Tools""]
                 remote {{
                     dot-netty.tcp {{
                         port = 8081
@@ -26,6 +27,7 @@ namespace AkkaBank.ConsoleNode
 
         public static readonly string BankHocon = $@"akka {{
                 actor.provider = cluster
+                extensions = [""Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubExtensionProvider,Akka.Cluster.Tools""]
                 remote {{
                     dot-netty.tcp {{
                         port = 0
@@ -40,6 +42,7 @@ namespace AkkaBank.ConsoleNode
 
         public static readonly string AtmHocon = $@"akka {{
                 actor.provider = cluster
+                extensions = [""Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubExtensionProvider,Akka.Cluster.Tools""]
                 remote {{
                     dot-netty.tcp {{
                         port = 0
