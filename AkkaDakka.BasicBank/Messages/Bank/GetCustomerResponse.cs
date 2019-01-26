@@ -2,7 +2,7 @@
 
 namespace AkkaBank.BasicBank.Messages.Bank
 {
-    public class GetCustomerResponseMessage
+    public class GetCustomerResponse
     {
         [JsonProperty]
         public CustomerAccount CustomerAccount { get; private set; }
@@ -13,15 +13,15 @@ namespace AkkaBank.BasicBank.Messages.Bank
         [JsonProperty]
         public string Error { get; private set; }
 
-        private GetCustomerResponseMessage() { }
+        private GetCustomerResponse() { }
 
-        public GetCustomerResponseMessage(CustomerAccount customerAccount)
+        public GetCustomerResponse(CustomerAccount customerAccount)
         {
             CustomerAccount = customerAccount;
             Ok = true;
         }
 
-        public GetCustomerResponseMessage(string error)
+        public GetCustomerResponse(string error)
         {
             Error = error;
             Ok = false;

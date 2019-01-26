@@ -1,10 +1,10 @@
 ﻿namespace AkkaBank.BasicBank.Messages.BankAdmin
 {
-    public class AdvertisementMessage
+    public class Advertisement
     {
         public string Blurb { get; }
 
-        public AdvertisementMessage(string blurb)
+        public Advertisement(string blurb)
         {
             Blurb = blurb;
         }

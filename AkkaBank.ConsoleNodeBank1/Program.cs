@@ -22,7 +22,7 @@ namespace AkkaBank.ConsoleNodeBank1
             clusterSystem.RegisterOnMemberUp(() =>
             {
                 actorSystem.ActorOf(ClusterSingletonManager.Props(
-                        Props.Create(() => new BankActor()),
+                        Props.Create(() => new BasicBank.Actors.BankActor()),
                         settings: ClusterSingletonManagerSettings.Create(actorSystem).WithRole(BankRoleName)),
                     BankActorName);
 
@@ -36,11 +36,11 @@ namespace AkkaBank.ConsoleNodeBank1
                 Console.WriteLine("BANK NODE UP!");
 
                 Console.WriteLine("ADD Billy White.");
-                bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(123, "Billy White")));
+                bankProxy.Tell(new CreateCustomerRequest(new Customer(123, "Billy White")));
                 Console.WriteLine("ADD Sally Brown.");
-                bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(456, "Sally Brown")));
+                bankProxy.Tell(new CreateCustomerRequest(new Customer(456, "Sally Brown")));
                 Console.WriteLine("ADD Wally Green.");
-                bankProxy.Tell(new CreateCustomerRequestMessage(new Customer(789, "Wally Green")));
+                bankProxy.Tell(new CreateCustomerRequest(new Customer(789, "Wally Green")));
                 Console.ResetColor();
 
                 

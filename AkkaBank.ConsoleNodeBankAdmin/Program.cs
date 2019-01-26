@@ -28,7 +28,7 @@ namespace AkkaBank.ConsoleNodeBankAdmin
                         settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
                     name: $"{BankActorName}-proxy");
 
-                bankAdmin.Tell(new BankActorMessage(bankProxy));
+                bankAdmin.Tell(new BasicBank.Messages.Bank.BankActor(bankProxy));
             });
 
             while (true)

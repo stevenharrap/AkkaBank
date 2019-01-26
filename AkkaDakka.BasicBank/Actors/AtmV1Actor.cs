@@ -31,48 +31,48 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForAccountState()
         {
-            Receive<AccountActorMessage>(HandleSetAccount);
+            Receive((Action<Messages.AtmV1.AccountActor>) this.HandleSetAccount);
         }
 
         private void MainMenuState()
         {
-            Receive<ConsoleInputMessage>(HandleMainMenuInput);
+            Receive<ConsoleInput>(HandleMainMenuInput);
         }
 
         private void WithdrawalState()
         {
-            Receive<ConsoleInputMessage>(HandleWithdrawalInput);
+            Receive<ConsoleInput>(HandleWithdrawalInput);
         }
 
         private void DepositState()
         {
-            Receive<ConsoleInputMessage>(HandleDepositInput);
+            Receive<ConsoleInput>(HandleDepositInput);
         }
 
         private void WaitingForReceiptState()
         {
-            Receive<ReceiptMessage>(HandleReceipt);
+            Receive<ReceiptResponse>(HandleReceipt);
         }
 
         #endregion
 
         #region Handlers
 
-        private void HandleSetAccount(AccountActorMessage message)
+        private void HandleSetAccount(Messages.AtmV1.AccountActor message)
         {
             _bankAccount = message.Account;
             Become(MainMenuState);
             _console.Tell(MakeMainMenuScreenMessage());
         }
 
-        private void HandleMainMenuInput(ConsoleInputMessage message)
+        private void HandleMainMenuInput(ConsoleInput message)
         {
             switch (message.Input)
             {
                 case "w":
                     Become(WithdrawalState);
                     _console.Tell(
-                        new ConsoleOutputMessage(
+                        new ConsoleOutput(
                             new[] {
                                 "WITHDRAWAL!!!",
                                 "PLEASE ENTER AMOUNT..."
@@ -85,7 +85,7 @@ namespace AkkaBank.BasicBank.Actors
                 case "d":
                     Become(DepositState);
                     _console.Tell(
-                        new ConsoleOutputMessage(
+                        new ConsoleOutput(
                             new[] {
                                 "DEPOSIT!!!",
                                 "PLEASE ENTER AMOUNT..."
@@ -102,11 +102,11 @@ namespace AkkaBank.BasicBank.Actors
             }
         }
 
-        private void HandleDepositInput(ConsoleInputMessage message)
+        private void HandleDepositInput(ConsoleInput message)
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _bankAccount.Tell(new DepositMoneyMessage(amount));
+                _bankAccount.Tell(new DepositMoneyRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForReceiptState);
                 return;
@@ -115,11 +115,11 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("That's not money! Try again:");
         }
 
-        private void HandleWithdrawalInput(ConsoleInputMessage message)
+        private void HandleWithdrawalInput(ConsoleInput message)
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _bankAccount.Tell(new WithdrawMoneyMessage(amount));
+                _bankAccount.Tell(new WithdrawMoneyRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForReceiptState);
                 return;
@@ -128,7 +128,7 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("That's not money! Try again:");
         }
 
-        private void HandleReceipt(ReceiptMessage message)
+        private void HandleReceipt(ReceiptResponse message)
         {
             _console.Tell("Your transaction is complete!...\n");
             _console.Tell($"The balance of your account is: ${message.Balance}\n");
@@ -146,9 +146,9 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Screens        
 
-        private ConsoleOutputMessage MakeMainMenuScreenMessage()
+        private ConsoleOutput MakeMainMenuScreenMessage()
         {            
-            return new ConsoleOutputMessage(
+            return new ConsoleOutput(
                 new[] {
                     "WELCOME TO BASIC BANK",
                     string.Empty,

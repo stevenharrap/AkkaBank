@@ -32,7 +32,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             switch (message)
             {
-                case ConsoleInputMessage cim:
+                case ConsoleInput cim:
                     _console.Tell("BEEP BEEP BEEP. UNEXPECTED CONSOLE INPUT!");
                     break;
 
@@ -44,62 +44,62 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForBankState()
         {
-            Receive<BankActorMessage>(HandleBankActor);
+            Receive((Action<Messages.Bank.BankActor>) this.HandleBankActor);
         }
 
         private void WaitingForCustomerNumberState()
         {
-            Receive<ConsoleInputMessage>(HandleCustomerNumberInput);
-            Receive<AdvertisementMessage>(HandleAdvertisement);
+            Receive<ConsoleInput>(HandleCustomerNumberInput);
+            Receive<Advertisement>(HandleAdvertisement);
         }
 
         private void WaitingForCustomerState()
         {
-            Receive<GetCustomerResponseMessage>(HandleCustomerResponse);
+            Receive<GetCustomerResponse>(HandleCustomerResponse);
         }
 
         private void MainMenuState()
         {
-            Receive<ConsoleInputMessage>(HandleMainMenuInput);
+            Receive<ConsoleInput>(HandleMainMenuInput);
         }
 
         private void WithdrawalState()
         {
-            Receive<ConsoleInputMessage>(HandleWithdrawalInput);            
+            Receive<ConsoleInput>(HandleWithdrawalInput);            
         }
 
         private void DepositState()
         {
-            Receive<ConsoleInputMessage>(HandleDepositInput);
+            Receive<ConsoleInput>(HandleDepositInput);
         }
 
         private void WaitingForReceiptState()
         {
-            Receive<ReceiptMessage>(HandleReceipt);
-            Receive<ReceiptTimedOutMessage>(HandleTransactionTimedOut);
+            Receive<ReceiptResponse>(HandleReceipt);
+            Receive<ReceiptTimedOut>(HandleTransactionTimedOut);
         }
 
         #endregion
 
         #region Handlers
 
-        private void HandleBankActor(BankActorMessage message)
+        private void HandleBankActor(Messages.Bank.BankActor message)
         {
             _bank = message.Bank;
             Become(WaitingForCustomerNumberState);
             _console.Tell(MakeWelcomeScreenMessage());
         }
 
-        private void HandleAdvertisement(AdvertisementMessage message)
+        private void HandleAdvertisement(Advertisement message)
         {
             _console.Tell(MakeWelcomeScreenMessage(message));
         }
 
-        private void HandleCustomerNumberInput(ConsoleInputMessage message)
+        private void HandleCustomerNumberInput(ConsoleInput message)
         {
             if (int.TryParse(message.Input, out var accountNumber))
             {
-                _bank.Tell(new GetCustomerRequstMessage(accountNumber));
+                _bank.Tell(new GetCustomerRequst(accountNumber));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForCustomerState);
                 return;
@@ -108,14 +108,14 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("That's not an account number! Try again:");
         }
 
-        private void HandleTransactionTimedOut(ReceiptTimedOutMessage message)
+        private void HandleTransactionTimedOut(ReceiptTimedOut message)
         {
             _customerAccount = null;
             Become(WaitingForCustomerNumberState);
             _console.Tell(MakeWelcomeScreenMessage());
         }
 
-        private void HandleCustomerResponse(GetCustomerResponseMessage message)
+        private void HandleCustomerResponse(GetCustomerResponse message)
         {
             if (message.Ok)
             {
@@ -135,14 +135,14 @@ namespace AkkaBank.BasicBank.Actors
                 Self);
         }
 
-        private void HandleMainMenuInput(ConsoleInputMessage message)
+        private void HandleMainMenuInput(ConsoleInput message)
         {
             switch (message.Input)
             {
                 case "w":
                     Become(WithdrawalState);
                     _console.Tell(
-                        new ConsoleOutputMessage(
+                        new ConsoleOutput(
                             new[] {
                                 "WITHDRAWAL!!!",
                                 "PLEASE ENTER AMOUNT..."
@@ -155,7 +155,7 @@ namespace AkkaBank.BasicBank.Actors
                 case "d":
                     Become(DepositState);
                     _console.Tell(
-                        new ConsoleOutputMessage(
+                        new ConsoleOutput(
                             new[] {
                                 "DEPOSIT!!!",
                                 "PLEASE ENTER AMOUNT..."
@@ -172,16 +172,16 @@ namespace AkkaBank.BasicBank.Actors
             }
         }
 
-        private void HandleDepositInput(ConsoleInputMessage message)
+        private void HandleDepositInput(ConsoleInput message)
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _customerAccount.Account.Tell(new DepositMoneyMessage(amount));
+                _customerAccount.Account.Tell(new DepositMoneyRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Context.System.Scheduler.ScheduleTellOnce(
                     TimeSpan.FromSeconds(6),
                     Self,
-                    new ReceiptTimedOutMessage(),
+                    new ReceiptTimedOut(),
                     Self);
 
                 Become(WaitingForReceiptState);
@@ -191,16 +191,16 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("That's not money! Try again:");
         }
 
-        private void HandleWithdrawalInput(ConsoleInputMessage message)
+        private void HandleWithdrawalInput(ConsoleInput message)
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _customerAccount.Account.Tell(new WithdrawMoneyMessage(amount));
+                _customerAccount.Account.Tell(new WithdrawMoneyRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Context.System.Scheduler.ScheduleTellOnce(
                     TimeSpan.FromSeconds(6),
                     Self,
-                    new ReceiptTimedOutMessage(),
+                    new ReceiptTimedOut(),
                     Self);
 
                 Become(WaitingForReceiptState);
@@ -210,7 +210,7 @@ namespace AkkaBank.BasicBank.Actors
             _console.Tell("That's not money! Try again:");
         }
 
-        private void HandleReceipt(ReceiptMessage message)
+        private void HandleReceipt(ReceiptResponse message)
         {
             _console.Tell("Your transaction is complete!...\n");
             _console.Tell($"The balance of your account is: ${message.Balance}\n");
@@ -229,9 +229,9 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Screens        
 
-        private ConsoleOutputMessage MakeMainMenuScreenMessage()
+        private ConsoleOutput MakeMainMenuScreenMessage()
         {
-            return new ConsoleOutputMessage(
+            return new ConsoleOutput(
                 new[] {
                     $"Hi {_customerAccount.Customer.CustomerName},",
                     "WELCOME TO BASIC BANK.",
@@ -244,9 +244,9 @@ namespace AkkaBank.BasicBank.Actors
                 padding: 10);
         }
 
-        private ConsoleOutputMessage MakeWelcomeScreenMessage(AdvertisementMessage advert = null)
+        private ConsoleOutput MakeWelcomeScreenMessage(Advertisement advert = null)
         {          
-            return new ConsoleOutputMessage(
+            return new ConsoleOutput(
                 new[] {
                     "WELCOME TO BASIC BANK.",
                     advert == null 

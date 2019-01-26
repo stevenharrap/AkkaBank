@@ -28,7 +28,7 @@ namespace AkkaBank.ConsoleNodeAtm2
                         settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
                     name: $"{BankActorName}-proxy");
 
-                atmV2.Tell(new BankActorMessage(bankProxy));
+                atmV2.Tell(new BasicBank.Messages.Bank.BankActor(bankProxy));
             });
 
             while (true)

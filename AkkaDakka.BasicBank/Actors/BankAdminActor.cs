@@ -36,26 +36,26 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForBankState()
         {
-            Receive<BankActorMessage>(HandleBankActor);
+            Receive((Action<Messages.Bank.BankActor>) this.HandleBankActor);
         }
 
         private void WaitingForMenuInput()
         {
-            Receive<ConsoleInputMessage>(HandleMainMenuInput);
+            Receive<ConsoleInput>(HandleMainMenuInput);
         }
 
         #endregion
 
         #region Handlers
 
-        private void HandleBankActor(BankActorMessage message)
+        private void HandleBankActor(Messages.Bank.BankActor message)
         {
             _bank = message.Bank;
             _console.Tell(MakeMainMenuScreenMessage());
             Become(WaitingForMenuInput);
         }
 
-        private void HandleMainMenuInput(ConsoleInputMessage message)
+        private void HandleMainMenuInput(ConsoleInput message)
         {
             switch (message.Input)
             {
@@ -63,7 +63,7 @@ namespace AkkaBank.BasicBank.Actors
                 {
                     _console.Tell("sending advertisement");
                     var mediator = DistributedPubSub.Get(Context.System).Mediator;
-                    mediator.Tell(new Publish("advert", new AdvertisementMessage(_adverts[_advertId])));
+                    mediator.Tell(new Publish("advert", new Advertisement(_adverts[_advertId])));
                     _advertId = _advertId == _adverts.Length - 1 ? 0 : _advertId + 1;
                     break;
                 }
@@ -82,9 +82,9 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Screens        
 
-        private ConsoleOutputMessage MakeMainMenuScreenMessage()
+        private ConsoleOutput MakeMainMenuScreenMessage()
         {            
-            return new ConsoleOutputMessage(
+            return new ConsoleOutput(
                 new[] {
                     "BASIC BANK ADMIN.",
                     string.Empty,

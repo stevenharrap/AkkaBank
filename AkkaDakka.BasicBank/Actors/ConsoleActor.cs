@@ -15,8 +15,8 @@ namespace AkkaBank.BasicBank.Actors
 
         public ConsoleActor()
         {
-            Receive<ConsoleOutputMessage>(message => HandleConsoleOutput(message));
-            Receive<string>(message => HandleConsoleOutput(new ConsoleOutputMessage(message)));
+            Receive<ConsoleOutput>(message => HandleConsoleOutput(message));
+            Receive<string>(message => HandleConsoleOutput(new ConsoleOutput(message)));
             Receive<CloseConsole>(message => HandleCloseConsole(message));
         }
 
@@ -30,7 +30,7 @@ namespace AkkaBank.BasicBank.Actors
                 while (!_consoleCancellation.IsCancellationRequested)
                 {
                     var input = Console.ReadLine();
-                    parent.Tell(new ConsoleInputMessage(input));
+                    parent.Tell(new ConsoleInput(input));
                 }
             }, _consoleCancellation.Token);
                         
@@ -46,7 +46,7 @@ namespace AkkaBank.BasicBank.Actors
             new InputSimulator().Keyboard.KeyPress(VirtualKeyCode.RETURN);
         }
 
-        private void HandleConsoleOutput(ConsoleOutputMessage message)
+        private void HandleConsoleOutput(ConsoleOutput message)
         {
             if (message.Clear)
             {

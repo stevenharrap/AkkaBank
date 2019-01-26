@@ -1,10 +1,10 @@
 ﻿namespace AkkaBank.BasicBank.Messages.Account
 {
-    public class WithdrawMoneyMessage
+    public class WithdrawMoneyRequest
     {
         public int Amount { get; }
 
-        public WithdrawMoneyMessage(int amount)
+        public WithdrawMoneyRequest(int amount)
         {
             Amount = amount;
         }

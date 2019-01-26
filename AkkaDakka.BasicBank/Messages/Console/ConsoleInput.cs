@@ -1,10 +1,10 @@
 ﻿namespace AkkaBank.BasicBank.Messages.Console
 {
-    public class ConsoleInputMessage
+    public class ConsoleInput
     {
         public string Input { get; }
 
-        public ConsoleInputMessage(string input)
+        public ConsoleInput(string input)
         {
             Input = input;
         }

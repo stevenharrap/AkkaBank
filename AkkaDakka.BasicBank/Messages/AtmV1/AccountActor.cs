@@ -2,11 +2,11 @@
 
 namespace AkkaBank.BasicBank.Messages.AtmV1
 {
-    public class AccountActorMessage
+    public class AccountActor
     {
         public IActorRef Account { get; }
 
-        public AccountActorMessage(IActorRef account)
+        public AccountActor(IActorRef account)
         {
             Account = account;
         }

@@ -1,10 +1,10 @@
 ﻿namespace AkkaBank.BasicBank.Messages.Account
 {
-    public class ReceiptMessage
+    public class ReceiptResponse
     {
         public int Balance { get; }
 
-        public ReceiptMessage(int balance)
+        public ReceiptResponse(int balance)
         {
             Balance = balance;
         }
