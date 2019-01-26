@@ -83,21 +83,17 @@ namespace AkkaBank.BasicBank.Actors
         #region Screens        
 
         private ConsoleOutputMessage MakeMainMenuScreenMessage()
-        {
-            const string MainMenuScreen =
-                "****************************************\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "*         BASIC BANK ADMIN.            *\n" +
-                "*                                      *\n" +
-                "*         [a] ADVERTISE                *\n" +
-                "*         [b] BILL ACCOUNT FEES        *\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "****************************************\n";
-
-            return new ConsoleOutputMessage(MainMenuScreen, true);
+        {            
+            return new ConsoleOutputMessage(
+                new[] {
+                    "BASIC BANK ADMIN.",
+                    string.Empty,
+                    "[a] ADVERTISE",
+                    "[b] BILL ACCOUNT FEES"
+                },
+                clear: true,
+                boxed: true,
+                padding: 10);
         }
 
         #endregion

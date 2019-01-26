@@ -5,6 +5,7 @@ using WindowsInput;
 using WindowsInput.Native;
 using Akka.Actor;
 using AkkaBank.BasicBank.Messages.Console;
+using System.Linq;
 
 namespace AkkaBank.BasicBank.Actors
 {
@@ -52,7 +53,31 @@ namespace AkkaBank.BasicBank.Actors
                 Console.Clear();
             }
 
-            Console.Write(message.Output);
+            if (!message.Boxed)
+            {
+                foreach (var line in message.Output)
+                {
+                    Console.WriteLine(line);
+                }
+                return;
+            }
+
+            var maxLineLength = message.Output.Max(line => line.Length);
+            Console.WriteLine(Stars(maxLineLength + (message.Padding * 2) + 2));
+            Console.WriteLine($"*{Space(maxLineLength + (message.Padding * 2))}*");
+            Console.WriteLine($"*{Space(maxLineLength + (message.Padding * 2))}*");
+
+            foreach (var line in message.Output)
+            {
+                Console.WriteLine($"*{Space(message.Padding)}{line}{Space(maxLineLength - line.Length + message.Padding)}*");
+            }
+
+            Console.WriteLine($"*{Space(maxLineLength + (message.Padding * 2))}*");
+            Console.WriteLine($"*{Space(maxLineLength + (message.Padding * 2))}*");
+            Console.WriteLine(Stars(maxLineLength + (message.Padding * 2) + 2));
+
+            string Space(int n) => new string(' ', n);
+            string Stars(int n) => new string('*', n);
         }
     }
 }

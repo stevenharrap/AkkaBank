@@ -143,28 +143,26 @@ namespace AkkaBank.BasicBank.Actors
                     Become(WithdrawalState);
                     _console.Tell(
                         new ConsoleOutputMessage(
-                            "****************************************\n" +
-                            "*                                      *\n" +
-                            "*                                      *\n" +
-                            "*         WITHDRAWAL!!!.               *\n" +
-                            "*                                      *\n" +
-                            "*                                      *\n" +
-                            "****************************************\n" +
-                            "PLEASE ENTER AMOUNT:", true));
+                            new[] {
+                                "WITHDRAWAL!!!",
+                                "PLEASE ENTER AMOUNT..."
+                            },
+                            clear: true,
+                            boxed: true,
+                            padding: 10));
                     break;
 
                 case "d":
                     Become(DepositState);
                     _console.Tell(
                         new ConsoleOutputMessage(
-                            "****************************************\n" +
-                            "*                                      *\n" +
-                            "*                                      *\n" +
-                            "*         DEPOSIT!!!.                  *\n" +
-                            "*                                      *\n" +
-                            "*                                      *\n" +
-                            "****************************************\n" +
-                            "PLEASE ENTER AMOUNT:", true));
+                            new[] {
+                                "DEPOSIT!!!",
+                                "PLEASE ENTER AMOUNT..."
+                            },
+                            clear: true,
+                            boxed: true,
+                            padding: 10));
                     break;
 
                 default:
@@ -233,45 +231,32 @@ namespace AkkaBank.BasicBank.Actors
 
         private ConsoleOutputMessage MakeMainMenuScreenMessage()
         {
-            var name = _customerAccount.Customer.CustomerName;
-            var MainMenuScreen =
-                "****************************************\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                $"*         Hi {name},         *\n" +
-                "*         WELCOME TO BASIC BANK.       *\n" +
-                "*                                      *\n" +
-                "*         [w] WITHDRAWAL               *\n" +
-                "*         [d] DEPOSIT                  *\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "****************************************\n";
-
-            return new ConsoleOutputMessage(MainMenuScreen, true);            
+            return new ConsoleOutputMessage(
+                new[] {
+                    $"Hi {_customerAccount.Customer.CustomerName},",
+                    "WELCOME TO BASIC BANK.",
+                    string.Empty,
+                    "[w] WITHDRAWAL",
+                    "[d] DEPOSIT"
+                },
+                clear: true,
+                boxed: true,
+                padding: 10);
         }
 
         private ConsoleOutputMessage MakeWelcomeScreenMessage(AdvertisementMessage advert = null)
-        {
-            var welcomeScreen =
-                "****************************************\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "*         WELCOME TO BASIC BANK.       *\n";
-
-            if (advert != null)
-            {
-                welcomeScreen += advert.Blurb;
-            }
-
-            welcomeScreen +=     "*                                      *\n" +
-                "*         PLEASE ENTER YOU ACC.        *\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "*                                      *\n" +
-                "****************************************\n";
-
-            return new ConsoleOutputMessage(welcomeScreen, true);
+        {          
+            return new ConsoleOutputMessage(
+                new[] {
+                    "WELCOME TO BASIC BANK.",
+                    advert == null 
+                    ? string.Empty
+                    : advert.Blurb,
+                    "PLEASE ENTER YOU ACC."
+                },
+                clear: true,
+                boxed: true,
+                padding: 10);
         }
 
         #endregion
