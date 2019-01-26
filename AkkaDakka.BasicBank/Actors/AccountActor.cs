@@ -11,18 +11,19 @@ namespace AkkaBank.BasicBank.Actors
 
         public AccountActor()
         {
-            Receive<WithdrawMoneyRequest>(message => HandleWithdrawMoney(message));
-            Receive<DepositMoneyRequest>(message => HandleDepositMoney(message));
-        }
+            Receive<WithdrawRequest>(HandleWithdrawMoney);
+            Receive<DepositRequest>(HandleDepositMoney);
+            Receive<BalanceRequest>(HandleBalanceMoney);
+        }        
 
-        private void HandleDepositMoney(DepositMoneyRequest message)
+        private void HandleDepositMoney(DepositRequest message)
         {
             _balance += message.Amount;
 
             Sender.Tell(new ReceiptResponse(_balance));
         }
 
-        private void HandleWithdrawMoney(WithdrawMoneyRequest message)
+        private void HandleWithdrawMoney(WithdrawRequest message)
         {
             if (_balance - message.Amount < 0)
             {
@@ -31,6 +32,11 @@ namespace AkkaBank.BasicBank.Actors
 
             _balance -= message.Amount;
 
+            Sender.Tell(new ReceiptResponse(_balance));
+        }
+
+        private void HandleBalanceMoney(BalanceRequest message)
+        {
             Sender.Tell(new ReceiptResponse(_balance));
         }
     }

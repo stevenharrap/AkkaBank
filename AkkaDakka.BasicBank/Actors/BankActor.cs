@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.Dispatch.SysMsg;
 using Akka.Routing;
 using AkkaBank.BasicBank.Messages.Bank;
@@ -19,7 +20,7 @@ namespace AkkaBank.BasicBank.Actors
             {
                 _bankAccountsRouter.Tell(message, Sender);
             });
-            Receive<GetCustomerRequst>(message =>
+            Receive<GetCustomerRequest>(message =>
             {
                 _bankAccountsRouter.Tell(message, Sender);
             });
@@ -34,12 +35,16 @@ namespace AkkaBank.BasicBank.Actors
 
     public class CustomerManagerActor : ReceiveActor
     {      
-        private readonly Dictionary<int, CustomerAccount> _accounts = new Dictionary<int, CustomerAccount>();
+        private readonly Dictionary<int, CustomerAccount> _customerAccounts = new Dictionary<int, CustomerAccount>();
 
         public CustomerManagerActor()
         {
             Receive<CreateCustomerRequest>(HandleCreateCustomerRequest);
-            Receive<GetCustomerRequst>(HandleGetCustomerRequest);
+            Receive<GetCustomerRequest>(HandleGetCustomerRequest);
+            Receive<GetCustomersRequest>(HandleGetCustomersRequest);
+
+            var mediator = DistributedPubSub.Get(Context.System).Mediator;
+            mediator.Tell(new Subscribe("request-customer-accounts", Self));
         }
 
         protected override SupervisorStrategy SupervisorStrategy()
@@ -63,7 +68,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             GetCustomerResponse response;
 
-            if (_accounts.ContainsKey(message.Customer.CustomerNumber))
+            if (_customerAccounts.ContainsKey(message.Customer.CustomerNumber))
             {
                 response = new GetCustomerResponse("The account already exists.");
             }
@@ -71,7 +76,7 @@ namespace AkkaBank.BasicBank.Actors
             {
                 var account = Context.ActorOf(Props.Create(() => new AccountActor()), $"account-{message.Customer.CustomerNumber}");
                 var customerAccount = new CustomerAccount(message.Customer, account);
-                _accounts.Add(message.Customer.CustomerNumber, customerAccount);
+                _customerAccounts.Add(message.Customer.CustomerNumber, customerAccount);
                 response = new GetCustomerResponse(customerAccount);
             }
 
@@ -81,18 +86,30 @@ namespace AkkaBank.BasicBank.Actors
             }            
         }
 
-        private void HandleGetCustomerRequest(GetCustomerRequst message)
+        private void HandleGetCustomerRequest(GetCustomerRequest message)
         {
             //Pretend that it takes some time to find an account.
             Task.Delay(2000).GetAwaiter().GetResult();
 
-            if (_accounts.TryGetValue(message.CustomerNumber, out var customerAccount))
+            if (_customerAccounts.TryGetValue(message.CustomerNumber, out var customerAccount))
             {
                 Sender.Tell(new GetCustomerResponse(customerAccount));
                 return;
             }
 
             Sender.Tell(new GetCustomerResponse("No account found."));
-        }        
+        }
+
+        private void HandleGetCustomersRequest(GetCustomersRequest message)
+        {
+            //If we were better citizens we would spawn this to a child actor
+            foreach (var customerAccount in _customerAccounts)
+            {
+                //Pretend that it takes some time to find an account.                
+                Task.Delay(2000).GetAwaiter().GetResult();
+
+                Sender.Tell(new GetCustomerResponse(customerAccount.Value));
+            }
+        }
     }
 }

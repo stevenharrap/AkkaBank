@@ -99,7 +99,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var accountNumber))
             {
-                _bank.Tell(new GetCustomerRequst(accountNumber));
+                _bank.Tell(new GetCustomerRequest(accountNumber));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForCustomerState);
                 return;
@@ -176,7 +176,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _customerAccount.Account.Tell(new DepositMoneyRequest(amount));
+                _customerAccount.Account.Tell(new DepositRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Context.System.Scheduler.ScheduleTellOnce(
                     TimeSpan.FromSeconds(6),
@@ -195,7 +195,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _customerAccount.Account.Tell(new WithdrawMoneyRequest(amount));
+                _customerAccount.Account.Tell(new WithdrawRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Context.System.Scheduler.ScheduleTellOnce(
                     TimeSpan.FromSeconds(6),

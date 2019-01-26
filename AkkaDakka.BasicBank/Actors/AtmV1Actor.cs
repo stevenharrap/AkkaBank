@@ -106,7 +106,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _bankAccount.Tell(new DepositMoneyRequest(amount));
+                _bankAccount.Tell(new DepositRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForReceiptState);
                 return;
@@ -119,7 +119,7 @@ namespace AkkaBank.BasicBank.Actors
         {
             if (int.TryParse(message.Input, out var amount))
             {
-                _bankAccount.Tell(new WithdrawMoneyRequest(amount));
+                _bankAccount.Tell(new WithdrawRequest(amount));
                 _console.Tell("Please wait.. taking to the bank.\n");
                 Become(WaitingForReceiptState);
                 return;

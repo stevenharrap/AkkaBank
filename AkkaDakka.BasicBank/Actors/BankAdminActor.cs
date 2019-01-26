@@ -9,7 +9,7 @@ using AkkaBank.BasicBank.Messages.Console;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class BankAdminActor : ReceiveActor
+    public class BankAdminActor : ReceiveActor, IWithUnboundedStash
     {
         private IActorRef _console;
         private IActorRef _bank;
@@ -21,6 +21,8 @@ namespace AkkaBank.BasicBank.Actors
         };
 
         private int _advertId = 0;
+
+        public IStash Stash { get; set; }
 
         public BankAdminActor()
         {
@@ -44,6 +46,24 @@ namespace AkkaBank.BasicBank.Actors
             Receive<ConsoleInput>(HandleMainMenuInput);
         }
 
+        private void WaitingForCustomerAccounts()
+        {
+            Receive<GetCustomerResponse>(message => {
+                _console.Tell($"Received {message.CustomerAccount.Customer.CustomerName}");
+                Stash.Stash();
+            });
+            Receive<ProcessCustomerAccounts>(message =>
+            {
+                Become(ProccessingCustomerAccounts);
+                Stash.UnstashAll();
+            });
+        }
+
+        private void ProccessingCustomerAccounts()
+        {
+            Receive<GetCustomerResponse>(HandleProcessCustomerAccount);
+        }
+
         #endregion
 
         #region Handlers
@@ -57,18 +77,22 @@ namespace AkkaBank.BasicBank.Actors
 
         private void HandleMainMenuInput(ConsoleInput message)
         {
+            var mediator = DistributedPubSub.Get(Context.System).Mediator;
+
             switch (message.Input)
             {
                 case "a":
                 {
-                    _console.Tell("sending advertisement");
-                    var mediator = DistributedPubSub.Get(Context.System).Mediator;
+                    _console.Tell("sending advertisement");                    
                     mediator.Tell(new Publish("advert", new Advertisement(_adverts[_advertId])));
                     _advertId = _advertId == _adverts.Length - 1 ? 0 : _advertId + 1;
                     break;
                 }
                 case "b":
                     _console.Tell("billing account fees");
+                    Become(WaitingForCustomerAccounts);
+                    mediator.Tell(new Publish("request-customer-accounts", new GetCustomersRequest()));
+                    Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromSeconds(10), Self, new ProcessCustomerAccounts(), Self);
                     break;
 
                 default:
@@ -76,6 +100,11 @@ namespace AkkaBank.BasicBank.Actors
                     _console.Tell("What!? Try again...");
                     break;
             }
+        }
+
+        private void HandleProcessCustomerAccount(GetCustomerResponse message)
+        {
+            _console.Tell($"Processing {message.CustomerAccount.Customer.CustomerName}");
         }
 
         #endregion  

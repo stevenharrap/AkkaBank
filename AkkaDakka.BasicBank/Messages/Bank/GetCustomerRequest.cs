@@ -2,13 +2,13 @@
 
 namespace AkkaBank.BasicBank.Messages.Bank
 {
-    public class GetCustomerRequst : IConsistentHashable
+    public class GetCustomerRequest : IConsistentHashable
     {
         public int CustomerNumber { get; }
 
         public object ConsistentHashKey => CustomerNumber;
 
-        public GetCustomerRequst(int customerNumber)
+        public GetCustomerRequest(int customerNumber)
         {
             CustomerNumber = customerNumber;
         }

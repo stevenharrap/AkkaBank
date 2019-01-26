@@ -26,7 +26,7 @@ namespace AkkaBank.ConsoleDirect
                         Console.WriteLine("Enter amount to deposit...");
                         if (int.TryParse(Console.ReadLine(), out var save))
                         {
-                            balance = (bankActor.Ask<ReceiptResponse>(new DepositMoneyRequest(save)).GetAwaiter().GetResult()).Balance;
+                            balance = (bankActor.Ask<ReceiptResponse>(new DepositRequest(save)).GetAwaiter().GetResult()).Balance;
                         }
                         break;
 
@@ -34,7 +34,7 @@ namespace AkkaBank.ConsoleDirect
                         Console.WriteLine("Enter amount to withdraw...");
                         if (int.TryParse(Console.ReadLine(), out var spend))
                         {
-                            balance = (bankActor.Ask<ReceiptResponse>(new WithdrawMoneyRequest(spend)).GetAwaiter().GetResult()).Balance;
+                            balance = (bankActor.Ask<ReceiptResponse>(new WithdrawRequest(spend)).GetAwaiter().GetResult()).Balance;
                         }
                         break;
                 }
