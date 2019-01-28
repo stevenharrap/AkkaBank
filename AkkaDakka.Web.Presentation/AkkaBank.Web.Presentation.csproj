@@ -4,6 +4,16 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="wwwroot\images\**" />
+    <Compile Remove="wwwroot\js\**" />
+    <Content Remove="wwwroot\images\**" />
+    <Content Remove="wwwroot\js\**" />
+    <EmbeddedResource Remove="wwwroot\images\**" />
+    <EmbeddedResource Remove="wwwroot\js\**" />
+    <None Remove="wwwroot\images\**" />
+    <None Remove="wwwroot\js\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
   </ItemGroup>
@@ -11,8 +21,28 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\js\" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-grid.css" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-grid.min.css" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-reboot.css" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-reboot.min.css" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap.css" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap.css.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap.min.css" />
+    <None Include="wwwroot\3rdParty\bootstrap\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.js.map" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\3rdParty\bootstrap\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\3rdParty\jquery\jquery-3.3.1.min.js" />
+    <None Include="wwwroot\3rdParty\jquery\jquery-3.3.1.min.map" />
+    <None Include="wwwroot\3rdParty\popper\popper.min.js" />
   </ItemGroup>
 </Project>

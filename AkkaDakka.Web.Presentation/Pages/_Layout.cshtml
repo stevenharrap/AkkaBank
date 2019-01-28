@@ -1,10 +1,40 @@
-<!DOCTYPE html>
-<html>
+﻿<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />    
-    <title>@ViewData["Title"] </title>	 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="~/3rdParty/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/site/css/site.css" />
+
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
-	@RenderBody()        
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Navbar</a>
+        </nav>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 site-left-content">
+                @RenderSection("LeftContent")
+            </div>
+            <div class="col-sm-4 site-right-content">
+                @RenderSection("RightContent")
+            </div>
+        </div>
+        <div class="row justify-content-between">
+            <div class="col-sm-1">
+                Previous
+            </div>
+            <div class="col-sm-1">
+                Next
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/3rdParty/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="~/3rdParty/popper/popper.min.js"></script>
+    <script type="text/javascript" src="~/3rdParty/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
