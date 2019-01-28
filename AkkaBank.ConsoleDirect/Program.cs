@@ -2,7 +2,6 @@
 using Akka.Actor;
 using AkkaBank.BasicBank.Actors;
 using AkkaBank.BasicBank.Messages.Account;
-using AkkaBank.BasicBank.Messages.Bank;
 
 namespace AkkaBank.ConsoleDirect
 {

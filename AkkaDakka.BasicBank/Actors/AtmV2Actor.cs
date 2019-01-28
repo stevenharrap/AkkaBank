@@ -1,11 +1,11 @@
-﻿ using System;
+﻿using System;
 using Akka.Actor;
- using Akka.Cluster.Tools.PublishSubscribe;
- using AkkaBank.BasicBank.Messages.Account;
+using Akka.Cluster.Tools.PublishSubscribe;
+using AkkaBank.BasicBank.Messages.Account;
 using AkkaBank.BasicBank.Messages.AtmV2;
 using AkkaBank.BasicBank.Messages.Bank;
- using AkkaBank.BasicBank.Messages.BankAdmin;
- using AkkaBank.BasicBank.Messages.Console;
+using AkkaBank.BasicBank.Messages.BankAdmin;
+using AkkaBank.BasicBank.Messages.Console;
 
 namespace AkkaBank.BasicBank.Actors
 {

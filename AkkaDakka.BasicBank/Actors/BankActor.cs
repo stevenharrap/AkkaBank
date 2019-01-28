@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Cluster.Tools.PublishSubscribe;
-using Akka.Dispatch.SysMsg;
 using Akka.Routing;
 using AkkaBank.BasicBank.Messages.Bank;
 

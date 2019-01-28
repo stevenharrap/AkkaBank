@@ -1,6 +1,5 @@
 ﻿using Akka.Actor;
 using AkkaBank.BasicBank.Actors;
-using AkkaBank.BasicBank.Messages.AtmV1;
 
 namespace AkkaBank.ConsoleAtmV1
 {
