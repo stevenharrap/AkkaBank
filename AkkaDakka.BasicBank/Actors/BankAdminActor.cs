@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Akka.Actor;
 using Akka.Cluster.Tools.PublishSubscribe;
+using Akka.Routing;
 using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.BasicBank.Messages.BankAdmin;
 using AkkaBank.BasicBank.Messages.Console;
@@ -13,14 +14,16 @@ namespace AkkaBank.BasicBank.Actors
     {
         private IActorRef _console;
         private IActorRef _bank;
+        private IActorRef _accountFeeRouter;
 
         private readonly string[] _adverts = {
             "BUY MORE PANTS!",
             "BUY MORE SHIRTS!",
             "BUY MORE HATS!"
         };
-
         private int _advertId = 0;
+        private int _fee = 5;
+        private int _charged = 0;
 
         public IStash Stash { get; set; }
 
@@ -32,7 +35,10 @@ namespace AkkaBank.BasicBank.Actors
         protected override void PreStart()
         {
             _console = Context.ActorOf(Props.Create(() => new ConsoleActor()), "atm-console");
-        }
+            _accountFeeRouter = Context.ActorOf(
+                Props.Create<AccountFeeActor>()
+                .WithRouter(new RoundRobinPool(5, new DefaultResizer(1, 10))));
+        }        
 
         #region States
 
@@ -61,9 +67,10 @@ namespace AkkaBank.BasicBank.Actors
 
         private void ProccessingCustomerAccounts()
         {
-            Receive<GetCustomerResponse>(HandleProcessCustomerAccount);
+            Receive<GetCustomerResponse>(HandleCustomerAccount);
+            Receive<AccountFeeResponse>(HandleAccountFeeResponse);
         }
-
+        
         #endregion
 
         #region Handlers
@@ -78,16 +85,15 @@ namespace AkkaBank.BasicBank.Actors
         private void HandleMainMenuInput(ConsoleInput message)
         {
             var mediator = DistributedPubSub.Get(Context.System).Mediator;
-
+            _console.Tell(MakeMainMenuScreenMessage());
             switch (message.Input)
             {
-                case "a":
-                {
+                case "a":                   
                     _console.Tell("sending advertisement");                    
                     mediator.Tell(new Publish("advert", new Advertisement(_adverts[_advertId])));
                     _advertId = _advertId == _adverts.Length - 1 ? 0 : _advertId + 1;
                     break;
-                }
+                
                 case "b":
                     _console.Tell("billing account fees");
                     Become(WaitingForCustomerAccounts);
@@ -96,15 +102,30 @@ namespace AkkaBank.BasicBank.Actors
                     break;
 
                 default:
-                    _console.Tell(MakeMainMenuScreenMessage());
                     _console.Tell("What!? Try again...");
                     break;
             }
         }
 
-        private void HandleProcessCustomerAccount(GetCustomerResponse message)
+        private void HandleCustomerAccount(GetCustomerResponse message)
         {
             _console.Tell($"Processing {message.CustomerAccount.Customer.CustomerName}");
+            _accountFeeRouter.Tell(new AccountFeeRequest(_fee, message.CustomerAccount, Self));
+            _charged++;
+        }
+
+        private void HandleAccountFeeResponse(AccountFeeResponse message)
+        {
+            _console.Tell(message.FeeCharged > 0
+                ? $"{message.CustomerAccount.Customer.CustomerName} charged {message.FeeCharged}, Remaing balance: {message.Balance}"
+                : $"{message.CustomerAccount.Customer.CustomerName} has insufficent funds. Balance: {message.Balance}");
+            _charged--;
+
+            if (_charged == 0)
+            {
+                _console.Tell("All customer accounts billed.");
+                Become(WaitingForMenuInput);
+            }
         }
 
         #endregion  

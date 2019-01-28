@@ -63,12 +63,12 @@ namespace AkkaBank.BasicBank.Actors
             Receive<ConsoleInput>(HandleMainMenuInput);
         }
 
-        private void WithdrawalState()
+        private void WithdrawalInputState()
         {
             Receive<ConsoleInput>(HandleWithdrawalInput);            
         }
 
-        private void DepositState()
+        private void DepositInputState()
         {
             Receive<ConsoleInput>(HandleDepositInput);
         }
@@ -140,35 +140,70 @@ namespace AkkaBank.BasicBank.Actors
             switch (message.Input)
             {
                 case "w":
-                    Become(WithdrawalState);
-                    _console.Tell(
-                        new ConsoleOutput(
-                            new[] {
-                                "WITHDRAWAL!!!",
-                                "PLEASE ENTER AMOUNT..."
-                            },
-                            clear: true,
-                            boxed: true,
-                            padding: 10));
+                    Withdrawal();
+                    break;
+
+                case "b":
+                    Balance();
                     break;
 
                 case "d":
-                    Become(DepositState);
-                    _console.Tell(
-                        new ConsoleOutput(
-                            new[] {
-                                "DEPOSIT!!!",
-                                "PLEASE ENTER AMOUNT..."
-                            },
-                            clear: true,
-                            boxed: true,
-                            padding: 10));
+                    Deposit();
                     break;
 
                 default:
                     _console.Tell(MakeMainMenuScreenMessage());
                     _console.Tell("What!? Try again...");
                     break;
+            }
+
+            void Withdrawal()
+            {
+                Become(WithdrawalInputState);
+                _console.Tell(
+                    new ConsoleOutput(
+                        new[] {
+                                "WITHDRAWAL!!!",
+                                "PLEASE ENTER AMOUNT..."
+                        },
+                        clear: true,
+                        boxed: true,
+                        padding: 10));
+            }
+
+            void Balance()
+            {
+                _console.Tell(
+                        new ConsoleOutput(
+                            new[] {
+                                "BALANCE!!!",
+                            },
+                            clear: true,
+                            boxed: true,
+                            padding: 10));
+                _customerAccount.Account.Tell(new BalanceRequest());
+                _console.Tell("Please wait.. taking to the bank.\n");
+                Context.System.Scheduler.ScheduleTellOnce(
+                    TimeSpan.FromSeconds(6),
+                    Self,
+                    new ReceiptTimedOut(),
+                    Self);
+
+                Become(WaitingForReceiptState);
+            }
+
+            void Deposit()
+            {
+                Become(DepositInputState);
+                _console.Tell(
+                    new ConsoleOutput(
+                        new[] {
+                                "DEPOSIT!!!",
+                                "PLEASE ENTER AMOUNT..."
+                        },
+                        clear: true,
+                        boxed: true,
+                        padding: 10));
             }
         }
 
@@ -237,6 +272,7 @@ namespace AkkaBank.BasicBank.Actors
                     "WELCOME TO BASIC BANK.",
                     string.Empty,
                     "[w] WITHDRAWAL",
+                    "[b] BALANCE",
                     "[d] DEPOSIT"
                 },
                 clear: true,
