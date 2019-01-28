@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AkkaBank.ConsoleNode\AkkaBank.ConsoleNode.csproj" />
     <ProjectReference Include="..\AkkaDakka.BasicBank\AkkaBank.BasicBank.csproj" />
   </ItemGroup>
 

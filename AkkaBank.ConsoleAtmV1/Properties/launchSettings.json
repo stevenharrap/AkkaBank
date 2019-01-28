@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "AkkaBank.ConsoleAtmV1": {
+      "commandName": "Project"
+    }
+  }
+}

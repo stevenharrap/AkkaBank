@@ -1,15 +1,19 @@
 ﻿using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Configuration;
 using AkkaBank.BasicBank.Actors;
 using AkkaBank.BasicBank.Messages.Bank;
+using AkkaBank.ConsoleNode;
 
 namespace AkkaBank.ConsoleAtmV2
 {
-    internal class Program
+    internal class Program : ConsoleNodeBase
     {
         private static async Task Main(string[] args)
         {
-            var actorSystem = ActorSystem.Create("my-actor-system");
+            //Necessary for examples further on.
+            var config = ConfigurationFactory.ParseString(SingleHocon);
+            var actorSystem = ActorSystem.Create(ClusterName, config);
 
             var bank = actorSystem.ActorOf(Props.Create(() => new BasicBank.Actors.BankActor()), "simple-bank");
             bank.Tell(new CreateCustomerRequest(new Customer(123, "Billy White")));
