@@ -1,14 +1,33 @@
-﻿@page
-@model AkkaDakka.Web.Presentation.Pages.indexModel
-@{
-    ViewData["Title"] = "index";
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{    
     Layout = "~/Pages/_Layout.cshtml";
 }
 
 @section LeftContent {
-    <h2>index</h2>
+    <img src="~/images/akkanet.png" width="192" />
 
+    <h1>Why?</h1>
+    <ul>        
+        <li>
+            Avoids explicit locking and thread management, 
+            making it easier to write correct concurrent and parallel systems.
+        </li>
+        <li>
+            Everything in Akka.NET is designed to work in a distributed setting
+        </li>
+        <li>
+            Hiaracheal supervision
+        </li>
+    </ul>
+
+    <h1>Where did it come from</h1>
     <ul>
+        <li>Based on the Java Akka Toolkit</li>
+        <li>Inspiration drawn from Erlang</li>
+        <li>Several other implementations and approaches</li>
+    </ul>
+
+    @*<ul>
         <li>Basic actor system</li>
         <li>Parent Children</li>
         <li>Stashing</li>
@@ -18,9 +37,9 @@
         <li>Supervisor</li>
         <li>Cluster</li>
 
-    </ul>
+    </ul>*@
 }
 
 @section RightContent {
-   <p>do things in the project</p>
+   @*<p>do things in the project</p>*@
 }

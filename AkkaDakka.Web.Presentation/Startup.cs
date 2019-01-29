@@ -43,7 +43,7 @@ namespace AkkaDakka.Web.Presentation
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller=Default}/{action=Index}");
             });
         }
     }
