@@ -12,10 +12,12 @@ namespace AkkaBank.Web.Presentation.Models
 
         public static Step[] Get() => _steps;
 
-        public static Step Get(int number) => _steps[number];
-
+        public static Step Get(int number) => number >= 0 && number <= _steps.Length - 1
+            ? _steps[number]
+            : null;
     }
-    public class _LayoutModel
+
+    public class _LayoutModel : _BlankModel
     {
         public ImmutableArray<Step> Steps { get; }
         public int StepNumber { get; }
@@ -28,7 +30,7 @@ namespace AkkaBank.Web.Presentation.Models
             ? StepNumber + 1
             : (int?)null;
 
-        public _LayoutModel(Step[] steps, int stepNumber)
+        public _LayoutModel(Step[] steps, int stepNumber) : base(Models.Steps.Get(stepNumber).Title)
         {
             Steps = steps.ToImmutableArray();
             StepNumber = stepNumber;

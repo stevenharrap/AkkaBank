@@ -1,65 +1,95 @@
 ﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
 @{
-    Layout = "~/Pages/_Layout.cshtml";
+    Layout = "~/Pages/Templates/_SingleColumnLayout.cshtml";
 }
 
-@section LeftContent {
-    <h1>What is an actor?</h1>
-    <p>Without referring to .Net/C# concepts.</p>
+<h1>What is an actor?</h1>
+<p>Without referring to .Net/C# concepts.</p>
     
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card">
-                    <img src="~/images/actors/anactor.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">An actor handles messages</h5>
-                        <ul class="card-text">
-                            <li>An actor has a mail box. An actor receives messages from other actors.</li>
-                            <li>An actor processes each message in the order of arrival (a queue).</li>
-                            <li>An actor processes each message synchronously.</li>
-                            <li>An actor may choose to send messages in response.</li>
-                        </ul>
-                    </div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/actors/anactor.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">An actor handles messages</h5>
+                    <ul class="card-text">
+                        <li>An actor has a mail box. An actor receives messages from other actors.</li>
+                        <li>An actor processes each message in the order of arrival (a queue).</li>
+                        <li>An actor processes each message synchronously.</li>
+                        <li>An actor may choose to send messages in response.</li>
+                    </ul>
                 </div>
             </div>
+        </div>
 
-            <div class="col-sm-6">
-                <div class="card">
-                    <img src="~/images/actors/telling.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">"Telling" another actor</h5>
-                        <ul class="card-text">
-                            <li>Actor A 'Tells' Actor B a message</li>
-                            <li>The message goes into Actor B's mailbox</li>
-                            <li>Actor B may reply... or not!</li>
-                        </ul>
-                    </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/actors/telling.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">An actor <i>Tells</i> other actors statements</h5>
+                    <ul class="card-text">
+                        <li>Actor A 'Tells' Actor B a message</li>
+                        <li>The message goes into Actor B's mailbox</li>
+                        <li>Actor B may reply... or not!</li>
+                    </ul>
                 </div>
+            </div>
+        </div>
 
-                <div class="card">
-                    <img src="~/images/actors/asking.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">"Asking" another actor</h5>
-                        <ul class="card-text">
-                            <li>Actor A 'Asks' Actor B a question (a message)</li>
-                            <li>The message goes into the Actor B's mailbox</li>
-                            <li>Actor B should reply... but doesn't have to!</li>
-                            <li>Actor A will block until it gets an answer</li>
-                            <li>The answer will NOT go through actors A's mailbox</li>
-                        </ul>
-                    </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/actors/asking.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">An actos <i>Asks</i> other actor questions</h5>
+                    <ul class="card-text">
+                        <li>Actor A 'Asks' Actor B a question (a message)</li>
+                        <li>The message goes into the Actor B's mailbox</li>
+                        <li>Actor B should reply... but doesn't have to!</li>
+                        <li>Actor A will block until it gets an answer</li>
+                        <li>The answer will NOT go through actors A's mailbox</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    
-
-    
-
-
-}
-
-@section RightContent {
-
-}
+    <hr />
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/actors/parentchild.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Actor relationships</h5>
+                    <ul class="card-text">
+                        <li>An actor always has 1 parent actor</li>
+                        <li>An actor may have 0 or more child actors</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/actors/children.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Actors should spread</h5>
+                    <ul class="card-text">
+                        <li>An actor should aim to spread its work over its children</li>
+                        <li>An graph of actors should aim to spread wide</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/actors/dangerousactors.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Keep dangerous actors away</h5>
+                    <ul class="card-text">
+                        <li>Dangerous actors should be on the edges</li>
+                        <li>Dangerous actors that go bad are mitigated by supervisors</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

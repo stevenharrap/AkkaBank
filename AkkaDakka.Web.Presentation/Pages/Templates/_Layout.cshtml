@@ -1,0 +1,42 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_Blank.cshtml";
+}
+
+<div class="container site-top-nav-area">
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Jump to...
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        @foreach (var s in Model.Steps)
+                        {
+                            <a class="dropdown-item" href="/?step=@Model.Steps.IndexOf(s)">@s.Title</a>
+                        }
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+@RenderBody()
+
+<nav class="navbar fixed-bottom navbar-expand-lg bg-dark">
+    <div class="container">
+        <div class="row">
+            @if (Model.PreviousStep != null)
+            {
+                <a class="navbar-brand" href="/?step=@Model.PreviousStep">Previous</a>
+            }
+
+            @if (Model.NextStep != null)
+            {
+                <a class="navbar-brand" href="/?step=@Model.NextStep">Next</a>
+            }
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,17 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row site-content">
+        <div class="col-sm-8 site-left-content">
+            @RenderSection("LeftContent")
+        </div>
+        <div class="col-sm-4 site-right-content">
+            <div class="alert alert-secondary" role="alert">
+                @RenderSection("RightContent")
+            </div>
+        </div>
+    </div>
+</div>
