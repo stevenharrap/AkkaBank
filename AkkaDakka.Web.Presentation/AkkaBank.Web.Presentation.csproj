@@ -41,4 +41,9 @@
     <None Include="wwwroot\3rdParty\jquery\jquery-3.3.1.min.map" />
     <None Include="wwwroot\3rdParty\popper\popper.min.js" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="Pages\actors.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
 </Project>

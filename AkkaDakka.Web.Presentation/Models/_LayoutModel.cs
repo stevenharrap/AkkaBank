@@ -5,9 +5,14 @@ namespace AkkaBank.Web.Presentation.Models
 {
     public class Steps
     {
-        public static Step[] Get() => new Step[] {
-            new Step("Home", "index")
+        private static readonly Step[] _steps = {
+            new Step("Home", "~/Pages/index.cshtml"),
+            new Step("Actors", "~/Pages/actors.cshtml")
         };
+
+        public static Step[] Get() => _steps;
+
+        public static Step Get(int number) => _steps[number];
 
     }
     public class _LayoutModel
@@ -15,13 +20,13 @@ namespace AkkaBank.Web.Presentation.Models
         public ImmutableArray<Step> Steps { get; }
         public int StepNumber { get; }
 
-        public Step PreviousStep => StepNumber - 1 >= 0
-            ? Steps[StepNumber - 1]
-            : null;
+        public int? PreviousStep => StepNumber - 1 >= 0
+            ? StepNumber - 1
+            : (int?)null;
         public Step CurrentStep => Steps[StepNumber];
-        public Step NextStep => StepNumber + 1 < Steps.Length - 1
-            ? Steps[StepNumber + 1]
-            : null;
+        public int? NextStep => StepNumber + 1 < Steps.Length
+            ? StepNumber + 1
+            : (int?)null;
 
         public _LayoutModel(Step[] steps, int stepNumber)
         {
@@ -34,12 +39,12 @@ namespace AkkaBank.Web.Presentation.Models
     {
         public string Title { get; }
 
-        public string Url { get; }
+        public string View { get; }
 
-        public Step(string title, string url)
+        public Step(string title, string view)
         {
             Title = title;
-            Url = url;
+            View = view;
         }
     }
 }

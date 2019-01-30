@@ -1,3 +1,7 @@
 ﻿body .site-top-nav-area {
     margin-bottom: 1rem;
 }
+
+body .site-content {
+    margin-bottom: 5rem;
+}

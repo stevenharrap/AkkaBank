@@ -9,9 +9,11 @@ namespace AkkaBank.Web.Presentation.Controllers
 {
     public class DefaultController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(int step = 0)
         {
-            return View("~/Pages/index.cshtml", new _LayoutModel(Steps.Get(), 0));
+            if (step < 0 || step > Steps.Get().Length - 1) throw new Exception("Get lost!");
+
+            return View(Steps.Get(step).View, new _LayoutModel(Steps.Get(), step));
         }
     }
 }

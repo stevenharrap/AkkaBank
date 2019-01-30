@@ -1,0 +1,65 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/_Layout.cshtml";
+}
+
+@section LeftContent {
+    <h1>What is an actor?</h1>
+    <p>Without referring to .Net/C# concepts.</p>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <img src="~/images/actors/anactor.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">An actor handles messages</h5>
+                        <ul class="card-text">
+                            <li>An actor has a mail box. An actor receives messages from other actors.</li>
+                            <li>An actor processes each message in the order of arrival (a queue).</li>
+                            <li>An actor processes each message synchronously.</li>
+                            <li>An actor may choose to send messages in response.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="card">
+                    <img src="~/images/actors/telling.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">"Telling" another actor</h5>
+                        <ul class="card-text">
+                            <li>Actor A 'Tells' Actor B a message</li>
+                            <li>The message goes into Actor B's mailbox</li>
+                            <li>Actor B may reply... or not!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="~/images/actors/asking.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">"Asking" another actor</h5>
+                        <ul class="card-text">
+                            <li>Actor A 'Asks' Actor B a question (a message)</li>
+                            <li>The message goes into the Actor B's mailbox</li>
+                            <li>Actor B should reply... but doesn't have to!</li>
+                            <li>Actor A will block until it gets an answer</li>
+                            <li>The answer will NOT go through actors A's mailbox</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+
+
+}
+
+@section RightContent {
+
+}
