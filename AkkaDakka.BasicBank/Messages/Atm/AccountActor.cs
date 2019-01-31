@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
 
-namespace AkkaBank.BasicBank.Messages.AtmV1
+namespace AkkaBank.BasicBank.Messages.Atm
 {
     public class AccountActor
     {

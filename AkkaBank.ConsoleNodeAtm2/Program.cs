@@ -18,13 +18,13 @@ namespace AkkaBank.ConsoleNodeAtm2
 
             clusterSystem.RegisterOnMemberUp(() =>
             {
-                var atmV2 = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "atm2");
+                var atm = actorSystem.ActorOf(Props.Create(() => new AtmV3Actor()), "atm-terry-avenue");
                 var bankProxy = actorSystem.ActorOf(ClusterSingletonProxy.Props(
                         singletonManagerPath: $"/user/{BankActorName}",
                         settings: ClusterSingletonProxySettings.Create(actorSystem).WithRole(BankRoleName)),
                     name: $"{BankActorName}-proxy");
 
-                atmV2.Tell(new BasicBank.Messages.Bank.BankActor(bankProxy));
+                atm.Tell(new BasicBank.Messages.Bank.BankActor(bankProxy));
             });
 
             while (true)

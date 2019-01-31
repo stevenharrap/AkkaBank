@@ -29,7 +29,7 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForAccountState()
         {
-            Receive((Action<Messages.AtmV1.AccountActor>) this.HandleSetAccount);
+            Receive((Action<Messages.Atm.AccountActor>) this.HandleSetAccount);
         }
 
         private void MainMenuState()
@@ -56,7 +56,7 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Handlers
 
-        private void HandleSetAccount(Messages.AtmV1.AccountActor message)
+        private void HandleSetAccount(Messages.Atm.AccountActor message)
         {
             _bankAccount = message.Account;
             Become(MainMenuState);

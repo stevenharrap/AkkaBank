@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.Routing;
 using AkkaBank.BasicBank.Messages.Bank;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class BankActor : ReceiveActor
+    public class BankV1Actor : ReceiveActor
     {
         private IActorRef _bankAccountsRouter;
 
-        public BankActor()
+        public BankV1Actor()
         {
             Receive<CreateCustomerRequest>(message =>
             {
@@ -27,22 +26,19 @@ namespace AkkaBank.BasicBank.Actors
         protected override void PreStart()
         {
             _bankAccountsRouter = Context.ActorOf(
-                Props.Create<CustomerManagerActor>().WithRouter(new ConsistentHashingPool(5)), "customer-manager-router");
+                Props.Create<CustomerManagerV1Actor>().WithRouter(new ConsistentHashingPool(5)), "customer-manager-router");
         }
     }
 
-    public class CustomerManagerActor : ReceiveActor
+    public class CustomerManagerV1Actor : ReceiveActor
     {      
         private readonly Dictionary<int, CustomerAccount> _customerAccounts = new Dictionary<int, CustomerAccount>();
 
-        public CustomerManagerActor()
+        public CustomerManagerV1Actor()
         {
             Receive<CreateCustomerRequest>(HandleCreateCustomerRequest);
             Receive<GetCustomerRequest>(HandleGetCustomerRequest);
             Receive<GetCustomersRequest>(HandleGetCustomersRequest);
-
-            var mediator = DistributedPubSub.Get(Context.System).Mediator;
-            mediator.Tell(new Subscribe("request-customer-accounts", Self));
         }
 
         protected override SupervisorStrategy SupervisorStrategy()

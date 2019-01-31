@@ -1,20 +1,25 @@
 ﻿using System;
 using Akka.Actor;
+using Akka.Cluster.Tools.PublishSubscribe;
 using AkkaBank.BasicBank.Messages.Account;
 using AkkaBank.BasicBank.Messages.Atm;
 using AkkaBank.BasicBank.Messages.Bank;
+using AkkaBank.BasicBank.Messages.BankAdmin;
 using AkkaBank.BasicBank.Messages.Console;
 
 namespace AkkaBank.BasicBank.Actors
 {
-    public class AtmV2Actor : ReceiveActor
+    public class AtmV3Actor : ReceiveActor
     {
         private IActorRef _console;
         private IActorRef _bank;
         private CustomerAccount _customerAccount;
 
-        public AtmV2Actor()
+        public AtmV3Actor()
         {
+            var mediator = DistributedPubSub.Get(Context.System).Mediator;
+            mediator.Tell(new Subscribe("advert", Self));
+
             Become(WaitingForBankState);
         }
         
@@ -45,6 +50,7 @@ namespace AkkaBank.BasicBank.Actors
         private void WaitingForCustomerNumberState()
         {
             Receive<ConsoleInput>(HandleCustomerNumberInput);
+            Receive<Advertisement>(HandleAdvertisement);
         }
 
         private void WaitingForCustomerState()
@@ -82,6 +88,11 @@ namespace AkkaBank.BasicBank.Actors
             _bank = message.Bank;
             Become(WaitingForCustomerNumberState);
             _console.Tell(MakeWelcomeScreenMessage());
+        }
+
+        private void HandleAdvertisement(Advertisement message)
+        {
+            _console.Tell(MakeWelcomeScreenMessage(message));
         }
 
         private void HandleCustomerNumberInput(ConsoleInput message)
@@ -269,11 +280,14 @@ namespace AkkaBank.BasicBank.Actors
                 padding: 10);
         }
 
-        private ConsoleOutput MakeWelcomeScreenMessage()
+        private ConsoleOutput MakeWelcomeScreenMessage(Advertisement advert = null)
         {          
             return new ConsoleOutput(
                 new[] {
                     "WELCOME TO BASIC BANK.",
+                    advert == null 
+                    ? string.Empty
+                    : advert.Blurb,
                     "PLEASE ENTER YOU ACC."
                 },
                 clear: true,

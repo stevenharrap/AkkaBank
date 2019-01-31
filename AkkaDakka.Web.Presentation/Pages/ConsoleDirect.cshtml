@@ -1,0 +1,28 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_DoubleColumnLayout.cshtml";
+}
+
+@section LeftContent {
+    <h1>BasicBank - A really basic bank!</h1>
+    <p>Enough talk already! - lets cut some code!</p>
+    <p>We're going to follow the developmemt of a bank from an extremely primitive bank to a slightly less primitive bank.</p>
+    <ul>
+        <li>One ATM (that's the console)</li>
+        <li>Just one customer - so we don't need identity</li>
+        <li>Who cares about security</li>
+        <li>Lets hope the power never fails</li>
+        <li>That "Exit" option will be a problem</li>
+    </ul>
+    
+}
+
+@section RightContent {
+    <ul class="list-unstyled">
+        <li>
+            Open AkkaBank.ConsoleDirect
+        </li>
+    </ul>
+}
+
+

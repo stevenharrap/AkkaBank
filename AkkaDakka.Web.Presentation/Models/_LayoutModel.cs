@@ -7,7 +7,10 @@ namespace AkkaBank.Web.Presentation.Models
     {
         private static readonly Step[] _steps = {
             new Step("Home", "~/Pages/index.cshtml"),
-            new Step("Actors", "~/Pages/actors.cshtml")
+            new Step("Actors", "~/Pages/actors.cshtml"),
+            new Step("Messages", "~/Pages/messages.cshtml"),
+            new Step("Example Actor", "~/Pages/exampleActor.cshtml"),
+            new Step("BasicBank - Take 1", "~/Pages/ConsoleDirect.cshtml"),
         };
 
         public static Step[] Get() => _steps;

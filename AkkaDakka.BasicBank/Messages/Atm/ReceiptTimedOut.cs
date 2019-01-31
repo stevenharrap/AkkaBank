@@ -1,4 +1,4 @@
-﻿namespace AkkaBank.BasicBank.Messages.AtmV2
+﻿namespace AkkaBank.BasicBank.Messages.Atm
 {
     public class ReceiptTimedOut
     {

@@ -42,6 +42,15 @@
     <None Include="wwwroot\3rdParty\popper\popper.min.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Pages\consoleDirect.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\exampleActor.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\messages.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\actors.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

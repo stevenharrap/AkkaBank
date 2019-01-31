@@ -20,7 +20,7 @@ namespace AkkaBank.ConsoleNodeBank1
             clusterSystem.RegisterOnMemberUp(() =>
             {
                 actorSystem.ActorOf(ClusterSingletonManager.Props(
-                        Props.Create(() => new BasicBank.Actors.BankActor()),
+                        Props.Create(() => new BasicBank.Actors.BankV2Actor()),
                         settings: ClusterSingletonManagerSettings.Create(actorSystem).WithRole(BankRoleName)),
                     BankActorName);
 

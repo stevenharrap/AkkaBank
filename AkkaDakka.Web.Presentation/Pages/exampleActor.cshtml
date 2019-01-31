@@ -1,0 +1,51 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_DoubleColumnLayout.cshtml";
+}
+
+
+
+@section LeftContent {
+    <h1>An example Actor</h1>
+    <p>The "AccountActor" is an example of a simple actor... nothing fancy.</p>
+    <h2>AccountActor</h2>
+
+    <ul>
+        <li>Extending "ReceiveActor" defines the class as an Actor.</li>
+        <li>
+            The Actor defines what kinds of messages it can receive in the constructor: 
+            "When I receive a "WithdrawRequest" message I will handle it with my "HandleWithdrawMoney" method.</li>
+        <li>When the Actor processes a message it responds to the sender of the message via the "Sender.Tell" method.</li>
+        <li>Note that the Actpr has no public methods or properties!!!</li>
+    </ul>
+
+    <h2>An Actor System</h2>
+    <ul>
+        <li>An Actor System is a graph made up of many actors</li>
+        <li>An Actor is not directly instantiated - instead the actor system is given instructions on how create the actor. </li>
+        <li>AkkaBank.ConsoleAtmV1 -> Program shows how the AcountActor is instantiated.</li>
+    </ul>
+    <p> </p>
+
+    <h2>IActorRef : Everyones an IActorRef</h2>
+    <ul>
+        <li>When an Actor is instantiated the actor system creates an IActorRef to represent the Actor.</li>
+        <li>The IActorRef does not provide any information about the Actors underlying type.</li>
+        <li>The IActorRef only provides the means to "Tell" or "Ask" the actor messgaes.</li>
+        <li>The IActorRef can be lost or recreated via various mechanisms but the Actor is never lost.</li>
+        <li>The IActorRef is an address to the Actor</li>
+    </ul>
+}
+
+@section RightContent {
+    <ul class="list-unstyled">
+        <li>
+            Open AkkaBank.BasicBank -> Actors -> AccountActor
+        </li>
+        <li>
+            AkkaBank.ConsoleAtmV1 -> Program
+        </li>
+    </ul>
+}
+
+

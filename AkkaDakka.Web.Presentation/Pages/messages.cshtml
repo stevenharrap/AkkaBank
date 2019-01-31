@@ -1,0 +1,56 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_SingleColumnLayout.cshtml";
+}
+
+<h1>Messages</h1>
+<p>Without referring to .Net/C# concepts.</p>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/messages/typicalmessagetravel.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Typical message paths</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>Between the actor and its parent.</li>
+                        <li>Between the actor and its children.</li>
+                        <li>In response to the Sender of a received message.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/messages/immutability.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">All messages must be immutable</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>The same message will probably be distributed to many actors.</li>
+                        <li>Mutable messages would not be thread safe.</li>
+                        <li>Changing a message will upredictably change the state of all actors that have consumed the message.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="~/images/messages/distibute.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Distibute messages</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>Don't let an actor become a bottle neck - short, fast handling of messages.</li>
+                        <li>Actors are cheap - distribute messages to many children.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        
+    </div>
+</div>
