@@ -18,7 +18,7 @@ namespace AkkaBank.ConsoleAtmV2
             bank.Tell(new CreateCustomerRequest(new Customer(789, "Wally Green")));
 
             var atm = actorSystem.ActorOf(Props.Create(() => new AtmV2Actor()), "simple-bank-atm");
-            atm.Tell(new BankActor(bank));
+            atm.Tell(new SetBank(bank));
 
             while (true)
             {

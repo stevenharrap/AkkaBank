@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AkkaBank.Web.Presentation.Models
 {
@@ -10,7 +9,8 @@ namespace AkkaBank.Web.Presentation.Models
             new Step("Actors", "~/Pages/actors.cshtml"),
             new Step("Messages", "~/Pages/messages.cshtml"),
             new Step("Example Actor", "~/Pages/exampleActor.cshtml"),
-            new Step("BasicBank - Take 1", "~/Pages/ConsoleDirect.cshtml"),
+            new Step("BasicBank - Awfuly Simple", "~/Pages/ConsoleDirect.cshtml"),
+            new Step("BasicBank - Atm V1", "~/Pages/AtmV1.cshtml"),
         };
 
         public static Step[] Get() => _steps;

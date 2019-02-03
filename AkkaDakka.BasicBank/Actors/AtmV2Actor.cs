@@ -39,7 +39,7 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForBankState()
         {
-            Receive((Action<Messages.Bank.BankActor>) this.HandleBankActor);
+            Receive<SetBank>(HandleSetBank);
         }
 
         private void WaitingForCustomerNumberState()
@@ -77,7 +77,7 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Handlers
 
-        private void HandleBankActor(Messages.Bank.BankActor message)
+        private void HandleSetBank(SetBank message)
         {
             _bank = message.Bank;
             Become(WaitingForCustomerNumberState);

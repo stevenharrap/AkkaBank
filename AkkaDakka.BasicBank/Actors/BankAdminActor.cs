@@ -42,7 +42,7 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForBankState()
         {
-            Receive((Action<Messages.Bank.BankActor>) this.HandleBankActor);
+            Receive((Action<Messages.Bank.SetBank>) this.HandleBankActor);
         }
 
         private void WaitingForMenuInput()
@@ -73,7 +73,7 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Handlers
 
-        private void HandleBankActor(Messages.Bank.BankActor message)
+        private void HandleBankActor(Messages.Bank.SetBank message)
         {
             _bank = message.Bank;
             _console.Tell(MakeMainMenuScreenMessage());

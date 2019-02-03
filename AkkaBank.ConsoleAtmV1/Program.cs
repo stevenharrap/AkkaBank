@@ -12,7 +12,7 @@ namespace AkkaBank.ConsoleAtmV1
             var account = actorSystem.ActorOf(Props.Create(() => new AccountActor()), "mrs-smith-account");
             var atm = actorSystem.ActorOf(Props.Create(() => new AtmV1Actor()), "simple-bank-atm");
 
-            atm.Tell(new BasicBank.Messages.Atm.AccountActor(account));
+            atm.Tell(new BasicBank.Messages.Atm.SetAccount(account));
 
             while (true)
             {

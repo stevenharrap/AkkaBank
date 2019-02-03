@@ -7,20 +7,43 @@
     <h1>BasicBank - A really basic bank!</h1>
     <p>Enough talk already! - lets cut some code!</p>
     <p>We're going to follow the developmemt of a bank from an extremely primitive bank to a slightly less primitive bank.</p>
-    <ul>
-        <li>One ATM (that's the console)</li>
-        <li>Just one customer - so we don't need identity</li>
-        <li>Who cares about security</li>
-        <li>Lets hope the power never fails</li>
-        <li>That "Exit" option will be a problem</li>
-    </ul>
-    
+
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <li>Console handles input and output and blocks the main thread</li>
+                <li>Just one customer - so we don't need identity</li>
+                <li>Who cares about security</li>
+                <li>Lets hope the power never fails - because we'll loose everything</li>
+                <li>That "Exit" option will be a problem</li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <img src="~/images/console-direct/diagram.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">What happened</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>The actor system in the main thread</li>
+                        <li>An Account Actor in the actor system.</li>
+                        <li>Asking the Account Actor and blocking the main thread.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @section RightContent {
     <ul class="list-unstyled">
         <li>
-            Open AkkaBank.ConsoleDirect
+            DEBUG ConsoleDirect
+        </li>
+        <li>
+            VIEW AccountActor.cs
+        </li>
+        <li>
+            VIEW Program.cs
         </li>
     </ul>
 }

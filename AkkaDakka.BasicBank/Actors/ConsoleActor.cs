@@ -62,6 +62,11 @@ namespace AkkaBank.BasicBank.Actors
                 return;
             }
 
+            // This draws boxes around output. E.g
+            // *********
+            // * hello *
+            // * world *
+            // *********
             var maxLineLength = message.Output.Max(line => line.Length);
             Console.WriteLine(Stars(maxLineLength + (message.Padding * 2) + 2));
             Console.WriteLine($"*{Space(maxLineLength + (message.Padding * 2))}*");

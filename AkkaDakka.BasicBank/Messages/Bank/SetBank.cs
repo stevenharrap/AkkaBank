@@ -2,11 +2,11 @@
 
 namespace AkkaBank.BasicBank.Messages.Bank
 {
-    public class BankActor
+    public class SetBank
     {
         public IActorRef Bank { get; }
 
-        public BankActor(IActorRef bank)
+        public SetBank(IActorRef bank)
         {
             Bank = bank;
         }

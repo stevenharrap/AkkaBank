@@ -1,0 +1,56 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_DoubleColumnLayout.cshtml";
+}
+
+@section LeftContent {
+    <h1>BasicBank - Now with an ATM!</h1>    
+
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <li>Now we have an ATM actor to handle input and output.</li>
+                <li>Still just one account.</li>
+                <li>We have a dedicated "Console" actor for handling input and output without blocking.</li>
+                <li>We explore the State Machine in the ATM actor.</li>
+                <li>We explore the Console being a child of the ATM.</li>
+                <li>Most of our problems remain.</li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <img src="~/images/atm-v1/diagram.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">What happened</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>The actor system in the main thread.</li>
+                        <li>An Account Actor in the actor system.</li>
+                        <li>An ATM Actor in the actor system.</li>
+                        <li>The ATM Actor has a child Console Actor.</li>
+                        <li>Telling the ATM about an Actor starts the show.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section RightContent {
+    <ul class="list-unstyled">
+        <li>
+            DEBUG ATM V1
+        </li>
+        <li>
+            VIEW Program.cs
+        </li>
+        <li>
+            VIEW AtmV1Actor.cs
+        </li>
+        <li>
+            VIEW ConsoleActor.cs
+        </li>
+    </ul>
+}
+
+
