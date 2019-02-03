@@ -5,6 +5,7 @@ using Akka.Routing;
 using AkkaBank.BasicBank.Messages.Bank;
 using AkkaBank.BasicBank.Messages.BankAdmin;
 using AkkaBank.BasicBank.Messages.Console;
+using Phobos.Actor;
 
 namespace AkkaBank.BasicBank.Actors
 {
@@ -90,6 +91,8 @@ namespace AkkaBank.BasicBank.Actors
                     _console.Tell("sending advertisement");                    
                     mediator.Tell(new Publish("advert", new Advertisement(_adverts[_advertId])));
                     _advertId = _advertId == _adverts.Length - 1 ? 0 : _advertId + 1;
+                    var timing = Context.GetInstrumentation().Monitor.CreateTiming("process-time");
+                    timing.Record(42);
                     break;
                 
                 case "b":
