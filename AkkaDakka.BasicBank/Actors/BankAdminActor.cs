@@ -42,7 +42,7 @@ namespace AkkaBank.BasicBank.Actors
 
         private void WaitingForBankState()
         {
-            Receive((Action<Messages.Bank.SetBank>) this.HandleBankActor);
+            Receive<SetBank>(HandleBankActor);
         }
 
         private void WaitingForMenuInput()
@@ -58,12 +58,12 @@ namespace AkkaBank.BasicBank.Actors
             });
             Receive<ProcessCustomerAccounts>(message =>
             {
-                Become(ProccessingCustomerAccounts);
+                Become(ProcessingCustomerAccounts);
                 Stash.UnstashAll();
             });
         }
 
-        private void ProccessingCustomerAccounts()
+        private void ProcessingCustomerAccounts()
         {
             Receive<GetCustomerResponse>(HandleCustomerAccount);
             Receive<AccountFeeResponse>(HandleAccountFeeResponse);
@@ -73,7 +73,7 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Handlers
 
-        private void HandleBankActor(Messages.Bank.SetBank message)
+        private void HandleBankActor(SetBank message)
         {
             _bank = message.Bank;
             _console.Tell(MakeMainMenuScreenMessage());

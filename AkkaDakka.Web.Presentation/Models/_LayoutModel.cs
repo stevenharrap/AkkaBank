@@ -9,8 +9,14 @@ namespace AkkaBank.Web.Presentation.Models
             new Step("Actors", "~/Pages/actors.cshtml"),
             new Step("Messages", "~/Pages/messages.cshtml"),
             new Step("Example Actor", "~/Pages/exampleActor.cshtml"),
-            new Step("BasicBank - Awfuly Simple", "~/Pages/ConsoleDirect.cshtml"),
-            new Step("BasicBank - Atm V1", "~/Pages/AtmV1.cshtml"),
+            new Step("BasicBank - Awfully Simple", "~/Pages/ConsoleDirect.cshtml"),
+            new Step("BasicBank - ATM V1", "~/Pages/AtmV1.cshtml"),
+            new Step("Routers", "~/Pages/routers.cshtml"),
+            new Step("BasicBank - ATM V2", "~/Pages/AtmV2.cshtml"),
+            new Step("Clusters", "~/Pages/clusters.cshtml"),
+            new Step("Distributed Bank", "~/Pages/distributedBank.cshtml"),
+            new Step("Advertising With PubSub", "~/Pages/pubsub.cshtml"),
+            new Step("Account Fees With PubSub and Routing", "~/Pages/billing.cshtml"),
         };
 
         public static Step[] Get() => _steps;

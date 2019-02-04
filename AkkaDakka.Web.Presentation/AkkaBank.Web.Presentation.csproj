@@ -42,6 +42,24 @@
     <None Include="wwwroot\3rdParty\popper\popper.min.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Pages\billing.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\pubsub.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\distributedBank.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\clusters.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\routers.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Pages\AtmV2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\AtmV1.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -66,5 +84,8 @@
     <Content Update="Pages\Templates\_DoubleColumnLayout.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\images\routing\" />
   </ItemGroup>
 </Project>

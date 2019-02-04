@@ -1,0 +1,55 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_DoubleColumnLayout.cshtml";
+}
+
+@section LeftContent {
+    <h1>BasicBank - Lets get distributed!</h1>    
+
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <li>We want to distribute the parts of our system</li>
+                <li>We want more than 1 ATM</li>
+                <li>We want to do some basic administration (later)</li>
+                <li>We want to ensure that our system wont start unless key components are present (roles)</li>
+                <li>The Singleton concept is a good start Clustering but not recommended for really good distribution.</li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <img src="~/images/cluster/distributedbank.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Distributing the bank</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>The Bank Actor is now on another node.</li>
+                        <li>The ATM Actors share a proxy to the bank.</li>
+                        <li>The Bank Actor is handled by a Cluster Singlton that ensures there will always be 1 Bank Actor somewhere in the cluster.</li>
+                        <li>The Seed Node allows the Cluster to start when enough nodes with the correct roles are present.</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section RightContent {
+    <ul class="list-unstyled">
+        <li>
+            DEBUG Full Cluster
+        </li>
+        <li>
+            VIEW AkkaBank.ConsoleNodeSeed Program.cs
+        </li>
+        <li>
+            VIEW AkkaBank.ConsoleNodeBank1 Program.cs
+        </li>
+        <li>
+            VIEW AkkaBank.ConsoleNodeAtm1 Program.cs
+        </li>
+    </ul>
+}
+
+

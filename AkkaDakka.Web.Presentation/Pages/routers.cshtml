@@ -1,0 +1,46 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_SingleColumnLayout.cshtml";
+}
+
+<h1>Routing</h1>
+<ul>
+    <li>We want the actors to spread wide and have lots of children</li>
+    <li>We want to let Akka decide how many children is allowable and how long they should exist</li>
+    <li>Welcome to routing!</li>
+    <li>There are several types of routers - here are two useful types</li>
+    <li>Routers are a special kind of Actor that is supplied by Akka - still just actors but with special powers.</li>
+    <li>Routers create many child Actors of a given type (e.g a AcountActorRouter makes many AcountActors)</li>
+</ul>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <img src="~/images/routing/RoundRobinRouter.png" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Round Robin</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>Creates many instances of a particular type of Actor</li>
+                        <li>Distribute work (messages) to each child in a circular fashion.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card">
+                <img src="~/images/routing/ConsistentHash2.png" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Consistent Hashing</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>A property of each message (perhaps an ID) determines which child of the router the message is sent</li>
+                        <li>A child will consistently received messages for a particlar set of IDs</li>
+                        <li>The hashing mechanism can be controled</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

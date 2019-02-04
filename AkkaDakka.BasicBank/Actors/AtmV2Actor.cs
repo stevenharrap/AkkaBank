@@ -57,12 +57,12 @@ namespace AkkaBank.BasicBank.Actors
             Receive<ConsoleInput>(HandleMainMenuInput);
         }
 
-        private void WithdrawalInputState()
+        private void WithdrawalState()
         {
             Receive<ConsoleInput>(HandleWithdrawalInput);            
         }
 
-        private void DepositInputState()
+        private void DepositState()
         {
             Receive<ConsoleInput>(HandleDepositInput);
         }
@@ -148,7 +148,7 @@ namespace AkkaBank.BasicBank.Actors
 
             void Withdrawal()
             {
-                Become(WithdrawalInputState);
+                Become(WithdrawalState);
                 _console.Tell(
                     new ConsoleOutput(
                         new[] {
@@ -183,7 +183,7 @@ namespace AkkaBank.BasicBank.Actors
 
             void Deposit()
             {
-                Become(DepositInputState);
+                Become(DepositState);
                 _console.Tell(
                     new ConsoleOutput(
                         new[] {

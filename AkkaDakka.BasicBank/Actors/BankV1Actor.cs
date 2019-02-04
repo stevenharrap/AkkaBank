@@ -25,11 +25,17 @@ namespace AkkaBank.BasicBank.Actors
 
         protected override void PreStart()
         {
+            // Create a router of CustomerManagerV1Actors.
+            // Each child will take care of a selection of accounts based on the ID in the message
+            // Different types of messages with the same ID value will always end up at the same child CustomerManager
             _bankAccountsRouter = Context.ActorOf(
                 Props.Create<CustomerManagerV1Actor>().WithRouter(new ConsistentHashingPool(5)), "customer-manager-router");
         }
     }
 
+    /// <summary>
+    /// The CustomerManager handles the access to a selection of accounts based on the ID in each message
+    /// </summary>
     public class CustomerManagerV1Actor : ReceiveActor
     {      
         private readonly Dictionary<int, CustomerAccount> _customerAccounts = new Dictionary<int, CustomerAccount>();
@@ -38,7 +44,6 @@ namespace AkkaBank.BasicBank.Actors
         {
             Receive<CreateCustomerRequest>(HandleCreateCustomerRequest);
             Receive<GetCustomerRequest>(HandleGetCustomerRequest);
-            Receive<GetCustomersRequest>(HandleGetCustomersRequest);
         }
 
         protected override SupervisorStrategy SupervisorStrategy()
@@ -92,18 +97,6 @@ namespace AkkaBank.BasicBank.Actors
             }
 
             Sender.Tell(new GetCustomerResponse("No account found."));
-        }
-
-        private void HandleGetCustomersRequest(GetCustomersRequest message)
-        {
-            //If we were better citizens we would spawn this to a child actor
-            foreach (var customerAccount in _customerAccounts)
-            {
-                //Pretend that it takes some time to find an account.                
-                Task.Delay(2000).GetAwaiter().GetResult();
-
-                Sender.Tell(new GetCustomerResponse(customerAccount.Value));
-            }
         }
     }
 }

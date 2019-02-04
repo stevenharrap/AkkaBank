@@ -83,7 +83,7 @@ namespace AkkaBank.BasicBank.Actors
 
         #region Handlers
 
-        private void HandleSetBank(Messages.Bank.SetBank message)
+        private void HandleSetBank(SetBank message)
         {
             _bank = message.Bank;
             Become(WaitingForCustomerNumberState);

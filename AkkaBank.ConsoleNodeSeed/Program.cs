@@ -11,10 +11,13 @@ namespace AkkaBank.ConsoleNodeSeed
     {
         public static async Task Main(string[] args)
         {
+            //The "Hocon" is a type of configuration string for Akka. 
+            //Standalone actor systems don't need it but clusters need some guidance.
             var config = ConfigurationFactory.ParseString(SeedHocon);
             var actorSystem = ActorSystem.Create(ClusterName, config);
             var clusterSystem = Cluster.Get(actorSystem);
 
+            //When the cluster is viable and the node is accepted into the cluster this will be fired
             clusterSystem.RegisterOnMemberUp(() =>
             {
                 Console.BackgroundColor = ConsoleColor.Black;

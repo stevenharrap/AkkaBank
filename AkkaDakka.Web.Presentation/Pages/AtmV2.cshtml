@@ -1,0 +1,60 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_DoubleColumnLayout.cshtml";
+}
+
+@section LeftContent {
+    <h1>BasicBank - Now with an actual bank!</h1>    
+
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <li>Now we have an ATM actor to handle input and output.</li>
+                <li>And we can multiple accounts</li>
+                <li>The ATM still has a "Console" actor for handling input and output without blocking.</li>
+                <li>The ATM now waits the Bank Actor.</li>
+                <li>We explor routers.</li>
+                <li>Some of our problems remain.</li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <img src="~/images/atm-v2/diagram.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">What happened</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>The actor system in the main thread.</li>
+                        <li>An Bank Actor in the actor system.</li>
+                        <li>The Bank Actor has child router for accounts.</li>
+                        <li>An ATM Actor in the actor system.</li>
+                        <li>The ATM Actor has a child Console Actor.</li>
+                        <li>Telling the ATM about an Actor starts the show.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section RightContent {
+    <ul class="list-unstyled">
+        <li>
+            DEBUG ATM V2
+        </li>
+        <li>
+            VIEW Program.cs
+        </li>
+        <li>
+            VIEW BankV1Actor.cs
+        </li>
+        <li>
+            VIEW AtmV2Actor.cs
+        </li>
+        <li>
+            VIEW ConsoleActor.cs
+        </li>
+    </ul>
+}
+
+

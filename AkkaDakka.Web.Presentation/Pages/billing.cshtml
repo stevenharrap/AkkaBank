@@ -1,0 +1,55 @@
+﻿@model AkkaBank.Web.Presentation.Models._LayoutModel
+@{
+    Layout = "~/Pages/Templates/_DoubleColumnLayout.cshtml";
+}
+
+@section LeftContent {
+    <h1>Billing with pub/sub and routing</h1>    
+
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <li>We want to charge account fees</li>
+                <li>We will subscribe our account managers to a pub/sub topic</li>
+                <li>When we receive the accounts we forward them to a router for charging</li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <img src="~/images/cluster/accountfees.jpg" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Distributing the bank</h5>
+                    <ul class="card-text list-unstyled">
+                        <li>The Admin Actor puts a message onto the bus under a specific topic</li>
+                        <li>The Customer Manager Actors are subscribed to the topic.</li>
+                        <li>Each Customer Manager will send all his Customer Accounts to the Sender.</li>
+                        <li>The Admin Actor will stash all incoming customer acounts until a threshhold is met (time)</li>
+                        <li>The Admin Actor will for the Customer Accounts to the Account Fee Actor Router</li>
+                        <ll>The router will Round-Robin the Customer Accounts</ll>
+                        <li>Each Account Fee Actor will determine if an account has funds and then charge the acount</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section RightContent {
+    <ul class="list-unstyled">
+        <li>
+            DEBUG Full Cluster
+        </li>
+        <li>
+            VIEW AtmV3Actor.cs
+        </li>
+        <li>
+            VIEW BankAdminActor.cs
+        </li>
+        <li>
+            VIEW AccountFeeActor.cs
+        </li>
+    </ul>
+}
+
+
