@@ -4,8 +4,6 @@
 }
 
 @section LeftContent {
-    <h1>BasicBank - Now with an ATM!</h1>    
-
     <div class="row">
         <div class="col-6">
             <ul>
@@ -21,14 +19,7 @@
             <div class="card">
                 <img src="~/images/atm-v1/diagram.jpg" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">What happened</h5>
-                    <ul class="card-text list-unstyled">
-                        <li>The actor system in the main thread.</li>
-                        <li>An Account Actor in the actor system.</li>
-                        <li>An ATM Actor in the actor system.</li>
-                        <li>The ATM Actor has a child Console Actor.</li>
-                        <li>Telling the ATM about an Actor starts the show.</li>
-                    </ul>
+                    <p>Telling the ATM about an Actor starts the show.</p>
                 </div>
             </div>
         </div>
@@ -43,12 +34,26 @@
         </li>
         <li>
             VIEW Program.cs
+            <ul>
+                <li>An ATM Actor</li>
+                <li>An Account Actor</li>
+                <li>Telling the ATM about the Account Actor starts everything</li>
+            </ul>
         </li>
         <li>
             VIEW AtmV1Actor.cs
+            <ul>
+                <li>The State Machine</li>
+                <li>The Child Console</li>
+            </ul>
         </li>
         <li>
             VIEW ConsoleActor.cs
+            <ul>
+                <li>Provides a command prompt without blocking</li>
+                <li>Shows text with boxes</li>
+                <li>Sends input to the Parent Actor</li>
+            </ul>
         </li>
     </ul>
 }

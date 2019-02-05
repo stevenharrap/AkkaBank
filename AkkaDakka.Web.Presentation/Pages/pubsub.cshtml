@@ -4,27 +4,22 @@
 }
 
 @section LeftContent {
-    <h1>BasicBank - Advertise with pub!</h1>    
-
     <div class="row">
         <div class="col-6">
             <ul>
                 <li>We want to advertise on our ATMs </li>
                 <li>We want use an adminstration node to administer the bank</li>
                 <li>Distributed pub/sub is a way of allowing actors to partisipate in a subscription mechanism</li>
+                <li>The Admin Actor puts a message onto the bus under a specific topic</li>
+                <li>The ATM Actors are subscribed to the topic.</li>
+                <li>When the ATM is waiting for a customer it can show the advertisement.</li>
             </ul>
         </div>
         <div class="col-6">
             <div class="card">
                 <img src="~/images/cluster/pubsub.jpg" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">Distributing the bank</h5>
-                    <ul class="card-text list-unstyled">
-                        <li>The Admin Actor puts a message onto the bus under a specific topic</li>
-                        <li>The ATM Actors are subscribed to the topic.</li>
-                        <li>When the ATM is waiting for a customer it can show the advertisement.</li>
-                        
-                    </ul>
+                    <p>The Admin actor use the Pub/Sub model to put Advertisements on the Event Bus</p>
                 </div>
             </div>
         </div>
@@ -39,11 +34,16 @@
         </li>
         <li>
             VIEW AtmV3Actor.cs
+            <ul>
+                <li>Subscribes to the Pub/Sub mediator</li>
+                <li>Shows advertisments from the bus and only when waiting for a customer</li>
+            </ul>
         </li>
         <li>
             VIEW BankAdminActor.cs
+            <ul>
+                <li>Puts advertisements on the Pub/Sub bus under a topic</li>
+            </ul>
         </li>
     </ul>
 }
-
-

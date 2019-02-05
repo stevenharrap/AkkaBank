@@ -39,9 +39,7 @@ namespace AkkaBank.ConsoleNodeBank1
                 bankProxy.Tell(new CreateCustomerRequest(new Customer(456, "Sally Brown")));
                 Console.WriteLine("ADD Wally Green.");
                 bankProxy.Tell(new CreateCustomerRequest(new Customer(789, "Wally Green")));
-                Console.ResetColor();
-
-                
+                Console.ResetColor();                
             });
 
             while (true)

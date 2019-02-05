@@ -8,7 +8,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle btn btn-info" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Jump to...
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -25,17 +25,17 @@
 
 @RenderBody()
 
-<nav class="navbar fixed-bottom navbar-expand-lg bg-dark">
+<nav class="navbar fixed-bottom bg-light">
     <div class="container">
         <div class="row">
             @if (Model.PreviousStep != null)
             {
-                <a class="navbar-brand" href="/?step=@Model.PreviousStep">Previous</a>
+                <a class="navbar-brand btn btn-outline-info" href="/?step=@Model.PreviousStep">Previous</a>
             }
 
             @if (Model.NextStep != null)
             {
-                <a class="navbar-brand" href="/?step=@Model.NextStep">Next</a>
+                <a class="navbar-brand btn btn-outline-info" href="/?step=@Model.NextStep">Next</a>
             }
         </div>
     </div>

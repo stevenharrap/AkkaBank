@@ -54,6 +54,9 @@
     <Content Update="Pages\clusters.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Pages\finish.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\routers.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

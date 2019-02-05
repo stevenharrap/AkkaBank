@@ -4,7 +4,6 @@
 }
 
 @section LeftContent {
-    <h1>BasicBank - A really basic bank!</h1>
     <p>Enough talk already! - lets cut some code!</p>
     <p>We're going to follow the developmemt of a bank from an extremely primitive bank to a slightly less primitive bank.</p>
 
@@ -16,18 +15,16 @@
                 <li>Who cares about security</li>
                 <li>Lets hope the power never fails - because we'll loose everything</li>
                 <li>That "Exit" option will be a problem</li>
+                <li>The actor system is in the main thread</li>
+                <li>There is an Account Actor in the actor system.</li>
+                <li>Asking the Account Actor blocks the main thread.</li>
             </ul>
         </div>
         <div class="col-6">
             <div class="card">
                 <img src="~/images/console-direct/diagram.jpg" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">What happened</h5>
-                    <ul class="card-text list-unstyled">
-                        <li>The actor system in the main thread</li>
-                        <li>An Account Actor in the actor system.</li>
-                        <li>Asking the Account Actor and blocking the main thread.</li>
-                    </ul>
+                    <p>Main thread Asks the Account Actor a question.</p>
                 </div>
             </div>
         </div>
@@ -44,6 +41,9 @@
         </li>
         <li>
             VIEW Program.cs
+        </li>
+        <li>
+            <em>Asking</em>
         </li>
     </ul>
 }

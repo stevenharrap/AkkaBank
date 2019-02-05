@@ -4,8 +4,6 @@
 }
 
 @section LeftContent {
-    <h1>BasicBank - Lets get distributed!</h1>    
-
     <div class="row">
         <div class="col-6">
             <ul>
@@ -14,20 +12,15 @@
                 <li>We want to do some basic administration (later)</li>
                 <li>We want to ensure that our system wont start unless key components are present (roles)</li>
                 <li>The Singleton concept is a good start Clustering but not recommended for really good distribution.</li>
+                <li>The Bank Actor is now on another node.</li>
+                <li>The ATM Actors are now on another nodes.</li>
             </ul>
         </div>
         <div class="col-6">
             <div class="card">
                 <img src="~/images/cluster/distributedbank.jpg" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">Distributing the bank</h5>
-                    <ul class="card-text list-unstyled">
-                        <li>The Bank Actor is now on another node.</li>
-                        <li>The ATM Actors share a proxy to the bank.</li>
-                        <li>The Bank Actor is handled by a Cluster Singlton that ensures there will always be 1 Bank Actor somewhere in the cluster.</li>
-                        <li>The Seed Node allows the Cluster to start when enough nodes with the correct roles are present.</li>
-                        
-                    </ul>
+                    <p>The bank is distributed and there will always be 1 Bank Actor somewhere</p>
                 </div>
             </div>
         </div>
@@ -42,12 +35,26 @@
         </li>
         <li>
             VIEW AkkaBank.ConsoleNodeSeed Program.cs
+            <ul>
+                <li>Starting a cluster on a node</li>
+                <li>Using a HOCON string</li>
+                <li>Waiting till the Cluster is UP</li>
+                <li>Nodes only start when the Cluster is "Complete"</li>
+            </ul>
         </li>
         <li>
             VIEW AkkaBank.ConsoleNodeBank1 Program.cs
+            <ul>
+                <li>The singleton concept</li>
+                <li>The Bank Actor is handled by a Cluster Singlton that ensures there will always be 1 Bank Actor somewhere in the cluster.</li>
+            </ul>
         </li>
         <li>
             VIEW AkkaBank.ConsoleNodeAtm1 Program.cs
+            <ul>
+                <li>Using a proxy to the singleton</li>
+                <li>Telling the ATM about the bank (proxy) starts the ATM</li>
+            </ul>
         </li>
     </ul>
 }

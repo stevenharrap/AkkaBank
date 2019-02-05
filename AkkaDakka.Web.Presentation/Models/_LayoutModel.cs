@@ -17,6 +17,7 @@ namespace AkkaBank.Web.Presentation.Models
             new Step("Distributed Bank", "~/Pages/distributedBank.cshtml"),
             new Step("Advertising With PubSub", "~/Pages/pubsub.cshtml"),
             new Step("Account Fees With PubSub and Routing", "~/Pages/billing.cshtml"),
+            new Step("Finish", "~/Pages/finish.cshtml"),
         };
 
         public static Step[] Get() => _steps;

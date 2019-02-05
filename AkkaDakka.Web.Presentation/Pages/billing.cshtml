@@ -4,14 +4,19 @@
 }
 
 @section LeftContent {
-    <h1>Billing with pub/sub and routing</h1>    
-
     <div class="row">
         <div class="col-6">
             <ul>
                 <li>We want to charge account fees</li>
                 <li>We will subscribe our account managers to a pub/sub topic</li>
                 <li>When we receive the accounts we forward them to a router for charging</li>
+                <li>The Admin Actor puts a message onto the bus under a specific topic</li>
+                <li>The Customer Manager Actors are subscribed to the topic.</li>
+                <li>Each Customer Manager will send all his Customer Accounts to the Sender.</li>
+                <li>The Admin Actor will stash all incoming customer acounts until a threshhold is met (time)</li>
+                <li>The Admin Actor will for the Customer Accounts to the Account Fee Actor Router</li>
+                <ll>The router will Round-Robin the Customer Accounts</ll>
+                <li>Each Account Fee Actor will determine if an account has funds and then charge the acount</li>
             </ul>
         </div>
         <div class="col-6">
@@ -20,13 +25,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Distributing the bank</h5>
                     <ul class="card-text list-unstyled">
-                        <li>The Admin Actor puts a message onto the bus under a specific topic</li>
-                        <li>The Customer Manager Actors are subscribed to the topic.</li>
-                        <li>Each Customer Manager will send all his Customer Accounts to the Sender.</li>
-                        <li>The Admin Actor will stash all incoming customer acounts until a threshhold is met (time)</li>
-                        <li>The Admin Actor will for the Customer Accounts to the Account Fee Actor Router</li>
-                        <ll>The router will Round-Robin the Customer Accounts</ll>
-                        <li>Each Account Fee Actor will determine if an account has funds and then charge the acount</li>
+                        
                     </ul>
                 </div>
             </div>
@@ -41,15 +40,19 @@
             DEBUG Full Cluster
         </li>
         <li>
-            VIEW AtmV3Actor.cs
-        </li>
-        <li>
             VIEW BankAdminActor.cs
+            <ul>
+                <li>The Stashing concept</li>
+                <li>Using Pub/Sub to start a request for all Customer Accounts</li>
+                <li>Using a RoundRobinPool router to handle Customer Accounts</li>
+            </ul>
         </li>
         <li>
             VIEW AccountFeeActor.cs
+            <ul>
+                <li>A Customer Account is charged by this Actor</li>
+                <li>Determines if there is enough funds for an account fee</li>
+            </ul>
         </li>
     </ul>
 }
-
-
