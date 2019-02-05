@@ -12,9 +12,9 @@
                         Jump to...
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        @foreach (var s in Model.Steps)
+                        @foreach (var s in Model.Slides)
                         {
-                            <a class="dropdown-item" href="/?step=@Model.Steps.IndexOf(s)">@s.Title</a>
+                            <a class="dropdown-item" href="/?slide=@Model.Slides.IndexOf(s)">@s.Title</a>
                         }
                     </div>
                 </li>
@@ -28,14 +28,14 @@
 <nav class="navbar fixed-bottom bg-light">
     <div class="container">
         <div class="row">
-            @if (Model.PreviousStep != null)
+            @if (Model.PreviousSlide != null)
             {
-                <a class="navbar-brand btn btn-outline-info" href="/?step=@Model.PreviousStep">Previous</a>
+                <a class="navbar-brand btn btn-outline-info" href="/?slide=@Model.PreviousSlide">Previous</a>
             }
 
-            @if (Model.NextStep != null)
+            @if (Model.NextSlide != null)
             {
-                <a class="navbar-brand btn btn-outline-info" href="/?step=@Model.NextStep">Next</a>
+                <a class="navbar-brand btn btn-outline-info" href="/?slide=@Model.NextSlide">Next</a>
             }
         </div>
     </div>

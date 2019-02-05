@@ -2,58 +2,58 @@
 
 namespace AkkaBank.Web.Presentation.Models
 {
-    public class Steps
+    public class Slides
     {
-        private static readonly Step[] _steps = {
-            new Step("Home", "~/Pages/index.cshtml"),
-            new Step("Actors", "~/Pages/actors.cshtml"),
-            new Step("Messages", "~/Pages/messages.cshtml"),
-            new Step("Example Actor", "~/Pages/exampleActor.cshtml"),
-            new Step("BasicBank - Awfully Simple", "~/Pages/ConsoleDirect.cshtml"),
-            new Step("BasicBank - ATM V1", "~/Pages/AtmV1.cshtml"),
-            new Step("Routers", "~/Pages/routers.cshtml"),
-            new Step("BasicBank - ATM V2", "~/Pages/AtmV2.cshtml"),
-            new Step("Clusters", "~/Pages/clusters.cshtml"),
-            new Step("Distributed Bank", "~/Pages/distributedBank.cshtml"),
-            new Step("Advertising With PubSub", "~/Pages/pubsub.cshtml"),
-            new Step("Account Fees With PubSub and Routing", "~/Pages/billing.cshtml"),
-            new Step("Finish", "~/Pages/finish.cshtml"),
+        private static readonly Slide[] _steps = {
+            new Slide("Home", "~/Pages/index.cshtml"),
+            new Slide("Actors", "~/Pages/actors.cshtml"),
+            new Slide("Messages", "~/Pages/messages.cshtml"),
+            new Slide("Example Actor", "~/Pages/exampleActor.cshtml"),
+            new Slide("BasicBank - Awfully Simple", "~/Pages/ConsoleDirect.cshtml"),
+            new Slide("BasicBank - ATM V1", "~/Pages/AtmV1.cshtml"),
+            new Slide("Routers", "~/Pages/routers.cshtml"),
+            new Slide("BasicBank - ATM V2", "~/Pages/AtmV2.cshtml"),
+            new Slide("Clusters", "~/Pages/clusters.cshtml"),
+            new Slide("Distributed Bank", "~/Pages/distributedBank.cshtml"),
+            new Slide("Advertising With PubSub", "~/Pages/pubsub.cshtml"),
+            new Slide("Account Fees With PubSub and Routing", "~/Pages/billing.cshtml"),
+            new Slide("Finish", "~/Pages/finish.cshtml"),
         };
 
-        public static Step[] Get() => _steps;
+        public static Slide[] Get() => _steps;
 
-        public static Step Get(int number) => number >= 0 && number <= _steps.Length - 1
+        public static Slide Get(int number) => number >= 0 && number <= _steps.Length - 1
             ? _steps[number]
             : null;
     }
 
     public class _LayoutModel : _BlankModel
     {
-        public ImmutableArray<Step> Steps { get; }
-        public int StepNumber { get; }
+        public ImmutableArray<Slide> Slides { get; }
+        public int SlideNumber { get; }
 
-        public int? PreviousStep => StepNumber - 1 >= 0
-            ? StepNumber - 1
+        public int? PreviousSlide => SlideNumber - 1 >= 0
+            ? SlideNumber - 1
             : (int?)null;
-        public Step CurrentStep => Steps[StepNumber];
-        public int? NextStep => StepNumber + 1 < Steps.Length
-            ? StepNumber + 1
+        public Slide CurrentSlide => Slides[SlideNumber];
+        public int? NextSlide => SlideNumber + 1 < Slides.Length
+            ? SlideNumber + 1
             : (int?)null;
 
-        public _LayoutModel(Step[] steps, int stepNumber) : base(Models.Steps.Get(stepNumber).Title)
+        public _LayoutModel(Slide[] slides, int slideNumber) : base(Models.Slides.Get(slideNumber).Title)
         {
-            Steps = steps.ToImmutableArray();
-            StepNumber = stepNumber;
+            Slides = slides.ToImmutableArray();
+            SlideNumber = slideNumber;
         }
     }
 
-    public class Step
+    public class Slide
     {
         public string Title { get; }
 
         public string View { get; }
 
-        public Step(string title, string view)
+        public Slide(string title, string view)
         {
             Title = title;
             View = view;
