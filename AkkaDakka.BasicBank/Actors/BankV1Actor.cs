@@ -73,6 +73,9 @@ namespace AkkaBank.BasicBank.Actors
             }
             else
             {
+                //The AccountActor is a child of this Actor so if it throws exceptions the Supervisor Strategy
+                //of this Actor must decide what to do.
+
                 var account = Context.ActorOf(Props.Create(() => new AccountActor()), $"account-{message.Customer.CustomerNumber}");
                 var customerAccount = new CustomerAccount(message.Customer, account);
                 _customerAccounts.Add(message.Customer.CustomerNumber, customerAccount);

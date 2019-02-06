@@ -4,19 +4,19 @@
 }
 
 @section LeftContent {
+    <p>We want to make our customer pay for some of this fancy new kit!</p>
+
     <div class="row">
         <div class="col-6">
             <ul>
-                <li>We want to charge account fees</li>
-                <li>We will subscribe our account managers to a pub/sub topic</li>
-                <li>When we receive the accounts we forward them to a router for charging</li>
-                <li>The Admin Actor puts a message onto the bus under a specific topic</li>
+                <li>We want to charge account fees.</li>
                 <li>The Customer Manager Actors are subscribed to the topic.</li>
+                <li>The Admin Actor puts a message onto the bus under a specific topic.</li>
                 <li>Each Customer Manager will send all his Customer Accounts to the Sender.</li>
-                <li>The Admin Actor will stash all incoming customer acounts until a threshhold is met (time)</li>
-                <li>The Admin Actor will for the Customer Accounts to the Account Fee Actor Router</li>
-                <ll>The router will Round-Robin the Customer Accounts</ll>
-                <li>Each Account Fee Actor will determine if an account has funds and then charge the acount</li>
+                <li>The Admin Actor will stash all incoming customer accounts until a threshold is met (time).</li>
+                <li>When the threshold is met the Admin Actor will change state and un-stash all for the received Customer Accounts.</li>
+                <li>The Customer Accounts are sent to an AccountFeeActor Round-Robin router</li>
+                <li>The AccountFeeActor will determine if an account has funds and then charge the account.</li>
             </ul>
         </div>
         <div class="col-6">

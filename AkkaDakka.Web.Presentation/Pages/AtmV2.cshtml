@@ -4,14 +4,15 @@
 }
 
 @section LeftContent {
+    <p>Our ATM is good but having more than one customer would be better.</p>
+
     <div class="row">
         <div class="col-6">
             <ul>
                 <li>Now we have an ATM actor to handle input and output.</li>
-                <li>And we can multiple accounts</li>
+                <li>And we can have multiple accounts.</li>
                 <li>The ATM still has a "Console" actor for handling input and output without blocking.</li>
-                <li>The ATM now waits the Bank Actor.</li>
-                <li>We explore routers.</li>
+                <li>The ATM now waits for the Bank Actor.</li>
                 <li>Some of our problems remain.</li>
             </ul>
         </div>
@@ -19,7 +20,8 @@
             <div class="card">
                 <img src="~/images/atm-v2/diagram.jpg" class="card-img-top">
                 <div class="card-body">
-                    <p>The Bank and ATM have a loose relationship. The Bank Actor has a route of Account Managers for handling customer accounts.</p>
+                    <p>The Bank and ATM have a loose relationship. 
+                        The Bank Actor has a router of Account Managers for handling customer accounts.</p>
                 </div>
             </div>
         </div>
@@ -45,6 +47,7 @@
             VIEW BankV1Actor.cs
             <ul>
                 <li>ConsistentHashingPool Router</li>
+                <li>Supervisor Strategy handles insufficient funds errors</li>
             </ul>
         </li>
         <li>

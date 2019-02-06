@@ -7,16 +7,16 @@
     <div class="row">
         <div class="col-sm-6">
             <ul>
-                <li>An actor system is called a Node</li>
-                <li>A collection of communicating Nodes across multiple computers is called a Cluster</li>
-                <li>There is a rich collection of tools in Akka for creating clusters that share work</li>
-                <li>A cluster should distribute work and be plastic to the loss or creation of individual nodes</li>
-                <li>Distributing work throughout a cluster should not involve knowing the actual location of nodes in the cluster</li>
-                <li>A cluster does is not hosted from a central location</li>
-                <li>A cluster shares information about itself within its nodes and elects members as temporay Leeders to handle lost or created members</li>
-                <li>A Node in a Cluster can have Roles</li>
-                <li>A Cluster can prevent itself from activiating unless nodes with specific Roles are present</li>
-                <li>Roles can define how nodes accept and share work</li>
+                <li>An Actor System is called a Node.</li>
+                <li>A collection of communicating Nodes across multiple computers is called a Cluster.</li>
+                <li>There is a rich collection of tools in Akka for creating clusters that share work.</li>
+                <li>A cluster should distribute work and be plastic to the loss or creation of individual nodes.</li>
+                <li>Distributing work throughout a cluster should not involve knowing the actual location of nodes in the cluster.</li>
+                <li>A cluster is not hosted from a central location.</li>
+                <li>A cluster shares information about itself within its nodes and elects members as temporary leaders to handle lost or created members.</li>
+                <li>A Node in a Cluster can have Roles.</li>
+                <li>A Cluster can prevent itself from activating unless nodes with specific Roles are present.</li>
+                <li>Roles can define how nodes accept and share work.</li>
             </ul>
         </div>
         <div class="col-sm-6">
@@ -25,9 +25,9 @@
                 <div class="card-body">
                     <h5 class="card-title">A cluster of 3 nodes hosting a singleton</h5>
                     <ul class="card-text list-unstyled">
-                        <li>The nodes share the duty of being a leader</li>
-                        <li>Node A only knows about a IActorRef to a Bank Actor</li>
-                        <li>Nobe B and C share the duty of a Bank Actor - if one fails the other will replace</li>
+                        <li>The nodes share the duty of being a leader.</li>
+                        <li>Node A only knows that a Bank Actor is somewhere in the cluster.</li>
+                        <li>Node B and C share the duty of a Bank Actor - if one fails the other will replace but node A will not be aware of the change.</li>
                     </ul>
                 </div>
             </div>

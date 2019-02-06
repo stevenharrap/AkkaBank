@@ -4,13 +4,14 @@
 }
 
 @section LeftContent {
+    <p>We've got off that 1 computer and we have multiple ATMs! Can we make the ATMs do something useful while they are waiting for customers?</p>
     <div class="row">
         <div class="col-6">
             <ul>
-                <li>We want to advertise on our ATMs </li>
-                <li>We want use an adminstration node to administer the bank</li>
-                <li>Distributed pub/sub is a way of allowing actors to partisipate in a subscription mechanism</li>
-                <li>The Admin Actor puts a message onto the bus under a specific topic</li>
+                <li>We want to advertise on our ATMs.</li>
+                <li>We want use an administration node to administer the bank.</li>
+                <li>Distributed pub/sub is a way of allowing actors to participate in a subscription mechanism.</li>
+                <li>The Admin Actor puts a message onto the bus under a specific topic.</li>
                 <li>The ATM Actors are subscribed to the topic.</li>
                 <li>When the ATM is waiting for a customer it can show the advertisement.</li>
             </ul>
@@ -36,7 +37,7 @@
             VIEW AtmV3Actor.cs
             <ul>
                 <li>Subscribes to the Pub/Sub mediator</li>
-                <li>Shows advertisments from the bus and only when waiting for a customer</li>
+                <li>Shows advertisements from the bus and only when waiting for a customer</li>
             </ul>
         </li>
         <li>
